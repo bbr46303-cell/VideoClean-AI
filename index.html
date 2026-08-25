@@ -251,7 +251,52 @@ async function checkUser(){
 }
 
 checkUser();
+async function processVideo(){
 
+  const fileInput = document.querySelector('input[type="file"]');
+  const file = fileInput.files[0];
+
+  if(!file){
+    alert("Please select a video first.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("video", file);
+  formData.append("x", 0);
+  formData.append("y", 0);
+  formData.append("w", 0);
+  formData.append("h", 0);
+  formData.append("enhance", true);
+  formData.append("audio_clean", true);
+
+  try{
+    alert("Video processing started. Please wait...");
+
+    const response = await fetch(
+      "https://videoclean-ai.onrender.com/process",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const result = await response.json();
+
+    if(result.error){
+      alert(result.error);
+      return;
+    }
+
+    if(result.download){
+      window.location.href =
+        "https://videoclean-ai.onrender.com" + result.download;
+    }
+
+  }catch(error){
+    alert("Processing failed: " + error.message);
+  }
+}
 </script>
 
 </body>
