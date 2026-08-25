@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>VideoClean AI</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10,7 +11,11 @@
 
 <style>
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+
+html{
+scroll-behavior:smooth
+}
+
 body{
 margin:0;
 background:#050505;
@@ -18,14 +23,22 @@ color:#fff;
 font-family:Arial,Helvetica,sans-serif;
 line-height:1.55
 }
-a{text-decoration:none;color:inherit}
-.container{width:min(1120px,92%);margin:auto}
+
+a{
+text-decoration:none;
+color:inherit
+}
+
+.container{
+width:min(1120px,92%);
+margin:auto
+}
 
 header{
 position:sticky;
 top:0;
 z-index:1000;
-background:rgba(5,5,5,.94);
+background:rgba(5,5,5,.95);
 backdrop-filter:blur(12px);
 border-bottom:1px solid #1c1c1c
 }
@@ -64,8 +77,7 @@ width:min(330px,92vw);
 padding:25px;
 background:#0d0d0d;
 border:1px solid #252525;
-border-radius:0 0 20px 20px;
-box-shadow:0 20px 60px rgba(0,0,0,.7)
+border-radius:0 0 20px 20px
 }
 
 .menu.open{
@@ -75,7 +87,7 @@ gap:8px
 }
 
 .menu a{
-padding:15px 16px;
+padding:15px;
 color:#ddd;
 font-size:18px;
 border-radius:12px
@@ -128,13 +140,18 @@ max-width:900px
 
 .field{
 width:100%;
-padding:15px;
+padding:16px;
 margin:8px 0;
 border-radius:12px;
 border:1px solid #303030;
 background:#090909;
 color:#fff;
-font-size:16px
+font-size:16px;
+outline:none
+}
+
+.field:focus{
+border-color:#20d9ff
 }
 
 .primary{
@@ -168,9 +185,21 @@ margin-top:10px
 
 .auth-msg{
 text-align:center;
-color:#aaa;
 margin-top:14px;
-min-height:25px
+min-height:28px;
+color:#20d9ff;
+font-weight:600
+}
+
+.logout-btn{
+margin-top:10px;
+width:100%;
+padding:12px;
+border:1px solid #444;
+background:#111;
+color:#aaa;
+border-radius:12px;
+cursor:pointer
 }
 
 .drop{
@@ -214,8 +243,6 @@ input[type=file]{
 display:none
 }
 
-/* VIDEO PREVIEW */
-
 .preview-wrap{
 display:none;
 margin-top:20px;
@@ -249,8 +276,6 @@ color:#20d9ff;
 font-weight:800
 }
 
-/* PROCESSING */
-
 .progress-box{
 display:none;
 margin-top:20px;
@@ -264,7 +289,6 @@ padding:18px
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:10px;
 margin-bottom:12px
 }
 
@@ -334,11 +358,8 @@ margin-top:15px;
 padding:15px;
 border-radius:30px;
 background:linear-gradient(90deg,#08d7f3,#447cff,#873eff);
-font-weight:900;
-cursor:pointer
+font-weight:900
 }
-
-/* OFFER */
 
 .offer-box{
 display:none;
@@ -382,8 +403,6 @@ font-weight:900;
 cursor:pointer
 }
 
-/* SECTIONS */
-
 .section{
 padding:55px 0
 }
@@ -395,17 +414,20 @@ margin:0 0 40px;
 font-weight:900
 }
 
-.grid,.pricing-grid{
+.grid,
+.pricing-grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:22px
 }
 
-.feature,.plan{
+.feature,
+.plan{
 padding:30px
 }
 
-.feature h3,.plan h3{
+.feature h3,
+.plan h3{
 font-size:24px;
 margin:12px 0
 }
@@ -430,8 +452,7 @@ position:relative
 }
 
 .plan.popular{
-border-color:#18d9ff;
-box-shadow:0 0 35px rgba(0,210,255,.09)
+border-color:#18d9ff
 }
 
 .badge{
@@ -485,8 +506,6 @@ font-weight:700;
 cursor:pointer
 }
 
-/* FAQ */
-
 .faq{
 max-width:900px;
 margin:auto
@@ -508,8 +527,7 @@ font-size:20px;
 font-weight:800;
 cursor:pointer;
 display:flex;
-justify-content:space-between;
-gap:20px
+justify-content:space-between
 }
 
 .faq-a{
@@ -523,16 +541,9 @@ color:#aaa
 display:block
 }
 
-.faq-item.open .arrow{
-transform:rotate(180deg)
-}
-
 .arrow{
-color:#3f99ff;
-transition:.2s
+color:#3f99ff
 }
-
-/* FOOTER */
 
 footer{
 border-top:1px solid #1d1d1d;
@@ -562,7 +573,8 @@ color:#999
 
 @media(max-width:800px){
 
-.grid,.pricing-grid{
+.grid,
+.pricing-grid{
 grid-template-columns:1fr
 }
 
@@ -651,7 +663,6 @@ Professional video cleanup • Enhancement • Audio cleanup
 
 <div class="card upload-card">
 
-
 <!-- LOGIN -->
 
 <div id="authBox">
@@ -664,6 +675,7 @@ Login / Create Account
 class="field"
 id="email"
 type="email"
+autocomplete="email"
 placeholder="Email address"
 >
 
@@ -671,19 +683,21 @@ placeholder="Email address"
 class="field"
 id="password"
 type="password"
+autocomplete="current-password"
 placeholder="Password"
 >
 
 <button
 class="primary"
 id="authButton"
-onclick="login()"
+onclick="handleAuth()"
 >
 Login
 </button>
 
 <button
 class="secondary"
+id="authModeButton"
 onclick="toggleAuth()"
 >
 Create new account
@@ -701,9 +715,27 @@ id="authMessage"
 
 <div id="appBox" style="display:none">
 
-<h2 style="font-size:32px;margin-top:0">
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap
+">
+
+<h2 style="font-size:30px;margin:0">
 Welcome to VideoClean AI 👋
 </h2>
+
+<button
+class="logout-btn"
+style="width:auto;margin:0"
+onclick="logout()"
+>
+Logout
+</button>
+
+</div>
 
 <hr>
 
@@ -711,8 +743,6 @@ Welcome to VideoClean AI 👋
 Video Cleaner
 </h2>
 
-
-<!-- FREE COUNTER -->
 
 <div
 id="freeCounter"
@@ -739,8 +769,6 @@ style="color:#20d9ff"
 </div>
 
 
-<!-- UPLOAD -->
-
 <label
 class="drop"
 for="videoFile"
@@ -751,13 +779,10 @@ for="videoFile"
 </div>
 
 <strong>
-
 Drag video or
-
 <span style="color:#21d8ff">
 Browse
 </span>
-
 </strong>
 
 <span>
@@ -781,8 +806,6 @@ accept="video/*"
 onchange="showFileName()"
 >
 
-
-<!-- PREVIEW -->
 
 <div
 class="preview-wrap"
@@ -814,8 +837,6 @@ id="videoTime"
 </div>
 
 
-<!-- PROCESS BUTTON -->
-
 <button
 class="primary"
 id="processButton"
@@ -825,8 +846,6 @@ style="margin-top:15px"
 ✨ Process Video
 </button>
 
-
-<!-- PROCESSING -->
 
 <div
 class="progress-box"
@@ -848,7 +867,6 @@ id="progressPercent"
 
 </div>
 
-
 <div class="progress-track">
 
 <div
@@ -857,7 +875,6 @@ id="progressBar"
 ></div>
 
 </div>
-
 
 <div class="processing-info">
 
@@ -886,8 +903,6 @@ id="status"
 ></div>
 
 
-<!-- DOWNLOAD -->
-
 <div
 class="download-box"
 id="downloadBox"
@@ -914,8 +929,6 @@ download
 </div>
 
 
-<!-- CREATOR OFFER -->
-
 <div
 class="offer-box"
 id="creatorOffer"
@@ -925,7 +938,7 @@ id="creatorOffer"
 🔥 LIMITED OFFER
 </span>
 
-<h2 style="margin:12px 0 5px">
+<h2>
 Creator Plan
 </h2>
 
@@ -941,11 +954,9 @@ Creator Plan
 
 </div>
 
-<div
-style="color:#aaa;margin-bottom:15px"
->
+<p style="color:#aaa">
 per month • 50 videos/month
-</div>
+</p>
 
 <ul
 style="
@@ -978,8 +989,6 @@ onclick="showCreatorOffer()"
 
 </section>
 
-
-<!-- FEATURES -->
 
 <section
 class="section container"
@@ -1047,8 +1056,6 @@ Simple upload-to-processing workflow with clear status feedback.
 </section>
 
 
-<!-- PRICING -->
-
 <section
 class="section container"
 id="pricing"
@@ -1059,9 +1066,6 @@ Choose Your <span class="gradient">Plan</span>
 </h2>
 
 <div class="pricing-grid">
-
-
-<!-- FREE -->
 
 <div class="card plan">
 
@@ -1079,21 +1083,10 @@ Free
 
 <ul>
 
-<li>
-1 video only
-</li>
-
-<li>
-Basic processing
-</li>
-
-<li>
-Standard resolution
-</li>
-
-<li>
-Basic support
-</li>
+<li>1 video only</li>
+<li>Basic processing</li>
+<li>Standard resolution</li>
+<li>Basic support</li>
 
 </ul>
 
@@ -1107,8 +1100,6 @@ Use Free Video
 </div>
 
 
-<!-- CREATOR -->
-
 <div class="card plan popular">
 
 <span class="badge">
@@ -1121,23 +1112,19 @@ Creator
 
 <div style="margin-top:10px">
 
-<span
-style="
+<span style="
 font-size:22px;
 color:#777;
 text-decoration:line-through;
 margin-right:8px
-"
->
+">
 ₹399
 </span>
 
-<span
-style="
+<span style="
 font-size:55px;
 font-weight:900
-"
->
+">
 ₹99
 </span>
 
@@ -1149,21 +1136,10 @@ per month
 
 <ul>
 
-<li>
-50 videos / month
-</li>
-
-<li>
-Enhanced processing
-</li>
-
-<li>
-Audio cleanup
-</li>
-
-<li>
-Priority processing
-</li>
+<li>50 videos / month</li>
+<li>Enhanced processing</li>
+<li>Audio cleanup</li>
+<li>Priority processing</li>
 
 </ul>
 
@@ -1176,8 +1152,6 @@ Get Creator ₹99
 
 </div>
 
-
-<!-- BUSINESS -->
 
 <div class="card plan">
 
@@ -1195,21 +1169,10 @@ per month
 
 <ul>
 
-<li>
-200 videos / month
-</li>
-
-<li>
-Bulk processing
-</li>
-
-<li>
-High-quality export
-</li>
-
-<li>
-Business support
-</li>
+<li>200 videos / month</li>
+<li>Bulk processing</li>
+<li>High-quality export</li>
+<li>Business support</li>
 
 </ul>
 
@@ -1227,8 +1190,6 @@ Get Business
 </section>
 
 
-<!-- FAQ -->
-
 <section
 class="section container"
 id="faq"
@@ -1240,26 +1201,18 @@ Frequently Asked <span class="gradient">Questions</span>
 
 <div class="faq">
 
-
 <div class="card faq-item">
 
 <button
 class="faq-q"
 onclick="faq(this)"
 >
-
 VideoClean AI kaise kaam karta hai?
-
-<span class="arrow">
-▼
-</span>
-
+<span class="arrow">▼</span>
 </button>
 
 <div class="faq-a">
-
 Video upload karne ke baad file connected processing backend ko bheji jaati hai. Processing complete hone par download link diya jaata hai.
-
 </div>
 
 </div>
@@ -1271,19 +1224,12 @@ Video upload karne ke baad file connected processing backend ko bheji jaati hai.
 class="faq-q"
 onclick="faq(this)"
 >
-
 Video process hone mein kitna time lagta hai?
-
-<span class="arrow">
-▼
-</span>
-
+<span class="arrow">▼</span>
 </button>
 
 <div class="faq-a">
-
 Short videos ke liye processing time video size aur backend load par depend karta hai.
-
 </div>
 
 </div>
@@ -1295,19 +1241,12 @@ Short videos ke liye processing time video size aur backend load par depend kart
 class="faq-q"
 onclick="faq(this)"
 >
-
 Kaunse video formats upload kar sakte hain?
-
-<span class="arrow">
-▼
-</span>
-
+<span class="arrow">▼</span>
 </button>
 
 <div class="faq-a">
-
 Common video formats upload kiye ja sakte hain. Actual support backend configuration par depend karega.
-
 </div>
 
 </div>
@@ -1319,19 +1258,12 @@ Common video formats upload kiye ja sakte hain. Actual support backend configura
 class="faq-q"
 onclick="faq(this)"
 >
-
 Kya account banana zaroori hai?
-
-<span class="arrow">
-▼
-</span>
-
+<span class="arrow">▼</span>
 </button>
 
 <div class="faq-a">
-
 Current version mein processing app login ke baad available hai.
-
 </div>
 
 </div>
@@ -1343,8 +1275,6 @@ Current version mein processing app login ke baad available hai.
 </main>
 
 
-<!-- FOOTER -->
-
 <footer id="support">
 
 <div class="container">
@@ -1355,24 +1285,12 @@ Policy & Support
 
 <div class="footer-links">
 
-<a href="#">
-Privacy Policy
-</a>
-
-<a href="#">
-Terms of Service
-</a>
-
-<a href="#">
-Refund Policy
-</a>
-
-<a href="#">
-Contact Support
-</a>
+<a href="#">Privacy Policy</a>
+<a href="#">Terms of Service</a>
+<a href="#">Refund Policy</a>
+<a href="#">Contact Support</a>
 
 </div>
-
 
 <div class="disclaimer">
 
@@ -1395,9 +1313,9 @@ VideoClean AI is a video processing and optimization tool. Users are responsible
 
 <script>
 
-/* =========================
-   SUPABASE
-========================= */
+/* =====================================
+   SUPABASE CONNECTION
+===================================== */
 
 const SUPABASE_URL =
 "https://imqkvnfmampzxpvkchtp.supabase.co";
@@ -1412,9 +1330,9 @@ SUPABASE_KEY
 );
 
 
-/* =========================
+/* =====================================
    VARIABLES
-========================= */
+===================================== */
 
 let signupMode = false;
 let previewURL = null;
@@ -1424,9 +1342,9 @@ let elapsed = 0;
 const FREE_VIDEO_LIMIT = 1;
 
 
-/* =========================
+/* =====================================
    MENU
-========================= */
+===================================== */
 
 function toggleMenu(){
 
@@ -1447,117 +1365,201 @@ document
 }
 
 
-/* =========================
-   LOGIN / SIGNUP
-========================= */
+/* =====================================
+   AUTH MODE
+===================================== */
 
 function toggleAuth(){
 
 signupMode = !signupMode;
 
-document.getElementById("authButton").innerText =
-signupMode ? "Sign Up" : "Login";
+const button =
+document.getElementById("authButton");
 
-document.querySelector(
-"#authBox .secondary"
-).innerText =
-signupMode
-? "Back to Login"
-: "Create new account";
+const modeButton =
+document.getElementById("authModeButton");
 
-document.getElementById(
-"authMessage"
-).innerText = "";
+const password =
+document.getElementById("password");
+
+const message =
+document.getElementById("authMessage");
+
+if(signupMode){
+
+button.innerText = "Sign Up";
+
+modeButton.innerText =
+"Back to Login";
+
+password.autocomplete =
+"new-password";
+
+}else{
+
+button.innerText = "Login";
+
+modeButton.innerText =
+"Create new account";
+
+password.autocomplete =
+"current-password";
+
+}
+
+message.innerText = "";
 
 }
 
 
-async function login(){
+/* =====================================
+   LOGIN / SIGNUP
+===================================== */
+
+async function handleAuth(){
 
 const email =
-document
-.getElementById("email")
+document.getElementById("email")
 .value
 .trim();
 
 const password =
-document
-.getElementById("password")
+document.getElementById("password")
 .value;
 
-const msg =
-document.getElementById(
-"authMessage"
-);
+const message =
+document.getElementById("authMessage");
 
-if(!email || !password){
+const button =
+document.getElementById("authButton");
 
-msg.innerText =
-"Please enter email and password.";
+
+if(!email){
+
+message.style.color="#ff6b7d";
+message.innerText =
+"Please enter your email address.";
 
 return;
 
 }
 
+
+if(!password){
+
+message.style.color="#ff6b7d";
+message.innerText =
+"Please enter your password.";
+
+return;
+
+}
+
+
 if(password.length < 6){
 
-msg.innerText =
+message.style.color="#ff6b7d";
+message.innerText =
 "Password must be at least 6 characters.";
 
 return;
 
 }
 
-msg.innerText =
+
+button.disabled = true;
+
+message.style.color="#20d9ff";
+
+message.innerText =
 signupMode
-? "Creating account..."
+? "Creating your account..."
 : "Logging in...";
+
 
 try{
 
 let result;
 
+
 if(signupMode){
 
 result =
 await supabaseClient.auth.signUp({
+
 email:email,
+
 password:password
+
 });
 
 }else{
 
 result =
 await supabaseClient.auth.signInWithPassword({
+
 email:email,
+
 password:password
+
 });
 
 }
 
+
 if(result.error){
 
-msg.innerText =
+console.error(result.error);
+
+message.style.color="#ff6b7d";
+
+message.innerText =
 result.error.message;
+
+button.disabled = false;
 
 return;
 
 }
+
 
 if(signupMode){
 
 if(result.data.session){
 
+message.style.color="#20d9ff";
+
+message.innerText =
+"Account created successfully!";
+
 showApp(result.data.user);
 
 }else{
 
-msg.innerText =
-"Account created. Please confirm your email, then login.";
+message.style.color="#20d9ff";
+
+message.innerText =
+"Account created. You can now login.";
+
+signupMode = false;
+
+document.getElementById(
+"authButton"
+).innerText = "Login";
+
+document.getElementById(
+"authModeButton"
+).innerText =
+"Create new account";
 
 }
 
 }else{
+
+message.style.color="#20d9ff";
+
+message.innerText =
+"Login successful!";
 
 showApp(result.data.user);
 
@@ -1567,1116 +1569,70 @@ showApp(result.data.user);
 
 console.error(error);
 
-msg.innerText =
-"Something went wrong. Please try again.";
+message.style.color="#ff6b7d";
+
+message.innerText =
+"Connection error. Please try again.";
 
 }
 
-}
-
-
-/* =========================
-   FREE VIDEO STORAGE
-========================= */
-
-function getFreeVideoCount(){
-
-return parseInt(
-localStorage.getItem(
-"videoclean_free_videos"
-) || "0"
-);
+button.disabled = false;
 
 }
 
 
-function setFreeVideoCount(count){
-
-localStorage.setItem(
-"videoclean_free_videos",
-count
-);
-
-}
-
-
-function hasUsedFreeVideo(){
-
-return getFreeVideoCount()
->= FREE_VIDEO_LIMIT;
-
-}
-
-
-function useFreeVideo(){
-
-const newCount =
-getFreeVideoCount() + 1;
-
-setFreeVideoCount(newCount);
-
-updateFreeCounter();
-
-}
-
-
-function updateFreeCounter(){
-
-const count =
-getFreeVideoCount();
-
-const text =
-document.getElementById(
-"freeCounterText"
-);
-
-if(!text)return;
-
-if(count >= FREE_VIDEO_LIMIT){
-
-text.innerText =
-"Free video used — Upgrade to Creator";
-
-text.style.color =
-"#ff6b7d";
-
-document.getElementById(
-"creatorOffer"
-).style.display =
-"block";
-
-}else{
-
-text.innerText =
-"1 free video available";
-
-text.style.color =
-"#20d9ff";
-
-}
-
-}
-
-
-/* =========================
+/* =====================================
    SHOW APP
-========================= */
+===================================== */
 
 function showApp(user){
 
 document.getElementById(
 "authBox"
-).style.display =
-"none";
+).style.display = "none";
 
 document.getElementById(
 "appBox"
-).style.display =
-"block";
+).style.display = "block";
 
 updateFreeCounter();
 
 }
 
 
-/* =========================
-   CHECK LOGIN
-========================= */
+/* =====================================
+   CHECK EXISTING SESSION
+===================================== */
 
 async function checkUser(){
 
 try{
 
-const {data} =
-await supabaseClient.auth.getUser();
-
-if(data.user){
-
-showApp(data.user);
-
-}
-
-}catch(error){
-
-console.log(
-"User not logged in"
-);
-
-}
-
-}
-
-
-/* =========================
-   FORMAT TIME
-========================= */
-
-function formatTime(seconds){
-
-if(!isFinite(seconds))
-return "00:00";
-
-seconds =
-Math.floor(seconds);
-
-const minutes =
-Math.floor(seconds / 60)
-.toString()
-.padStart(2,"0");
-
-const secs =
-(seconds % 60)
-.toString()
-.padStart(2,"0");
-
-return minutes + ":" + secs;
-/* =========================
-   VIDEO PREVIEW
-========================= */
-
-function showFileName(){
-
-const input =
-document.getElementById("videoFile");
-
-const file =
-input.files[0];
-
-const fileName =
-document.getElementById("fileName");
-
-const previewWrap =
-document.getElementById("previewWrap");
-
-const video =
-document.getElementById("videoPreview");
-
-const status =
-document.getElementById("status");
-
-if(!file){
-
-fileName.innerText =
-"No file selected";
-
-previewWrap.style.display =
-"none";
-
-return;
-
-}
-
-fileName.innerText =
-file.name;
-
-if(hasUsedFreeVideo()){
-
-previewWrap.style.display =
-"none";
-
-status.innerText =
-"🔒 Your free video has already been used. Please upgrade to Creator.";
-
-document.getElementById(
-"creatorOffer"
-).style.display =
-"block";
-
-return;
-
-}
-
-if(previewURL){
-
-URL.revokeObjectURL(
-previewURL
-);
-
-}
-
-previewURL =
-URL.createObjectURL(file);
-
-video.src =
-previewURL;
-
-previewWrap.style.display =
-"block";
-
-video.onloadedmetadata =
-function(){
-
-document.getElementById(
-"videoTime"
-).innerText =
-"00:00 / " +
-formatTime(video.duration);
-
-};
-
-video.ontimeupdate =
-function(){
-
-document.getElementById(
-"videoTime"
-).innerText =
-formatTime(video.currentTime) +
-" / " +
-formatTime(video.duration);
-
-};
-
-}
-
-
-/* =========================
-   PROCESS VIDEO
-========================= */
-
-async function processVideo(){
-
-const file =
-document
-.getElementById("videoFile")
-.files[0];
-
-const status =
-document.getElementById("status");
-
-const button =
-document.getElementById("processButton");
-
-const progressBox =
-document.getElementById("progressBox");
-
-const progressBar =
-document.getElementById("progressBar");
-
-const progressPercent =
-document.getElementById("progressPercent");
-
-const progressText =
-document.getElementById("progressText");
-
-const timer =
-document.getElementById("processingTimer");
-
-const downloadBox =
-document.getElementById("downloadBox");
-
-const downloadButton =
-document.getElementById("downloadButton");
-
-
-if(!file){
-
-status.innerText =
-"⚠️ Please select a video first.";
-
-return;
-
-}
-
-if(hasUsedFreeVideo()){
-
-status.innerText =
-"🔒 Free video already used. Please upgrade to Creator.";
-
-document.getElementById(
-"creatorOffer"
-).style.display =
-"block";
-
-return;
-
-}
-
-
-button.disabled =
-true;
-
-button.innerText =
-"⏳ Processing...";
-
-progressBox.style.display =
-"block";
-
-downloadBox.style.display =
-"none";
-
-progressBar.style.width =
-"5%";
-
-progressPercent.innerText =
-"5%";
-
-progressText.innerText =
-"Uploading video...";
-
-status.innerText =
-"Please wait while AI processes your video.";
-
-elapsed = 0;
-
-timer.innerText =
-"00:00";
-
-
-if(progressTimer){
-
-clearInterval(
-progressTimer
-);
-
-}
-
-progressTimer =
-setInterval(
-function(){
-
-elapsed++;
-
-timer.innerText =
-formatTime(elapsed);
-
-},
-1000
-);
-
-
-try{
-
-const formData =
-new FormData();
-
-formData.append(
-"video",
-file
-);
-
-formData.append(
-"enhance",
-"true"
-);
-
-formData.append(
-"audio_clean",
-"true"
-);
-
-
-/*
-   IMPORTANT:
-   Render backend URL
-*/
-
-const API_URL =
-window.location.origin;
-
-
-progressBar.style.width =
-"15%";
-
-progressPercent.innerText =
-"15%";
-
-progressText.innerText =
-"Sending video to AI backend...";
-
-
-const response =
-await fetch(
-API_URL + "/process",
-{
-method:"POST",
-body:formData
-}
-);
-
-
-progressBar.style.width =
-"50%";
-
-progressPercent.innerText =
-"50%";
-
-progressText.innerText =
-"AI processing in progress...";
-
-
-if(!response.ok){
-
-let errorText =
-"Server error";
-
-try{
-
-const errorData =
-await response.json();
-
-errorText =
-errorData.detail ||
-errorData.error ||
-errorText;
-
-}catch(e){}
-
-throw new Error(
-errorText
-);
-
-}
-
-
 const result =
-await response.json();
-
-
-if(result.error){
-
-throw new Error(
-result.error
-);
-
-}
-
-
-if(!result.download){
-
-throw new Error(
-"Processing completed but download link was not returned."
-);
-
-}
-
-
-progressBar.style.width =
-"100%";
-
-progressPercent.innerText =
-"100%";
-
-progressText.innerText =
-"Processing complete!";
-
-status.innerText =
-"🎉 Your video has been cleaned successfully.";
-
-
-const downloadURL =
-API_URL +
-result.download;
-
-downloadButton.href =
-downloadURL;
-
-downloadBox.style.display =
-"block";
-
-
-useFreeVideo();
-
-
-}catch(error){
-
-console.error(
-"PROCESS ERROR:",
-error
-);
-
-status.innerText =
-"❌ " +
-(error.message ||
-"Video processing failed.");
-
-progressText.innerText =
-"Processing failed.";
-
-progressBar.style.width =
-"0%";
-
-progressPercent.innerText =
-"0%";
-
-}finally{
-
-if(progressTimer){
-
-clearInterval(
-progressTimer
-);
-
-progressTimer =
-null;
-
-}
-
-button.disabled =
-false;
-
-button.innerText =
-"✨ Process Video";
-
-}
-
-}
-
-
-/* =========================
-   CREATOR PAYMENT
-========================= */
-
-async function showCreatorOffer(){
-
-const status =
-document.getElementById(
-"status"
-);
-
-status.innerText =
-"Preparing secure payment...";
-
-
-try{
-
-const response =
-await fetch(
-"/api/create-order",
-{
-method:"POST",
-headers:{
-"Content-Type":
-"application/json"
-},
-body:JSON.stringify({
-
-amount:9900,
-
-currency:"INR",
-
-receipt:
-"creator_" +
-Date.now()
-
-})
-}
-);
-
-
-if(!response.ok){
-
-const errorData =
-await response.json()
-.catch(
-()=>({})
-);
-
-throw new Error(
-errorData.detail ||
-"Unable to create payment order."
-);
-
-}
-
-
-const order =
-await response.json();
-
-
-const configResponse =
-await fetch(
-"/api/razorpay-config"
-);
-
-
-if(!configResponse.ok){
-
-throw new Error(
-"Razorpay configuration is missing."
-);
-
-}
-
-
-const config =
-await configResponse.json();
-
-
-const options = {
-
-key:
-config.key_id,
-
-amount:
-order.amount,
-
-currency:
-order.currency,
-
-name:
-"VideoClean AI",
-
-description:
-"Creator Plan - ₹99/month",
-
-order_id:
-order.order_id,
-
-handler:
-async function(payment){
-
-try{
-
-const verifyResponse =
-await fetch(
-"/api/verify-payment",
-{
-method:"POST",
-headers:{
-"Content-Type":
-"application/json"
-},
-body:JSON.stringify({
-
-razorpay_payment_id:
-payment.razorpay_payment_id,
-
-razorpay_order_id:
-payment.razorpay_order_id,
-
-razorpay_signature:
-payment.razorpay_signature
-
-})
-}
-);
-
-
-const verifyData =
-await verifyResponse.json();
-
-
-if(!verifyResponse.ok){
-
-throw new Error(
-verifyData.detail ||
-"Payment verification failed."
-);
-
-}
-
-
-alert(
-"🎉 Payment successful!\n\n"+
-"Creator Plan activated successfully."
-);
-
-status.innerText =
-"✅ Payment verified successfully.";
-
-}catch(error){
-
-console.error(error);
-
-alert(
-"Payment received, but verification failed. Please contact support."
-);
-
-status.innerText =
-"⚠️ Payment verification failed.";
-
-}
-
-},
-
-prefill:{
-
-email:
-document
-.getElementById("email")
-.value
-.trim()
-
-},
-
-theme:{
-
-color:"#08d7f3"
-
-}
-
-};
-
-
-if(!window.Razorpay){
-
-throw new Error(
-"Razorpay checkout failed to load."
-);
-
-}
-
-
-const razorpay =
-new Razorpay(options);
-
-razorpay.on(
-"payment.failed",
-function(response){
-
-console.error(
-"PAYMENT FAILED:",
-response
-);
-
-status.innerText =
-"❌ Payment failed. Please try again.";
-
-}
-);
-
-razorpay.open();
-
-
-}catch(error){
-
-console.error(
-"PAYMENT ERROR:",
-error
-);
-
-status.innerText =
-"❌ " +
-(error.message ||
-"Payment could not be started.");
-
-}
-
-}
-
-
-/* =========================
-   BUSINESS PAYMENT
-========================= */
-
-async function showBusinessOffer(){
-
-const status =
-document.getElementById(
-"status"
-);
-
-status.innerText =
-"Preparing Business payment...";
-
-
-try{
-
-const response =
-await fetch(
-"/api/create-order",
-{
-method:"POST",
-headers:{
-"Content-Type":
-"application/json"
-},
-body:JSON.stringify({
-
-amount:49900,
-
-currency:"INR",
-
-receipt:
-"business_" +
-Date.now()
-
-})
-}
-);
-
-
-if(!response.ok){
-
-const errorData =
-await response.json()
-.catch(
-()=>({})
-);
-
-throw new Error(
-errorData.detail ||
-"Unable to create payment order."
-);
-
-}
-
-
-const order =
-await response.json();
-
-
-const configResponse =
-await fetch(
-"/api/razorpay-config"
-);
-
-
-if(!configResponse.ok){
-
-throw new Error(
-"Razorpay configuration is missing."
-);
-
-}
-
-
-const config =
-await configResponse.json();
-
-
-const options = {
-
-key:
-config.key_id,
-
-amount:
-order.amount,
-
-currency:
-order.currency,
-
-name:
-"VideoClean AI",
-
-description:
-"Business Plan - ₹499/month",
-
-order_id:
-order.order_id,
-
-handler:
-async function(payment){
-
-const verifyResponse =
-await fetch(
-"/api/verify-payment",
-{
-method:"POST",
-headers:{
-"Content-Type":
-"application/json"
-},
-body:JSON.stringify({
-
-razorpay_payment_id:
-payment.razorpay_payment_id,
-
-razorpay_order_id:
-payment.razorpay_order_id,
-
-razorpay_signature:
-payment.razorpay_signature
-
-})
-}
-);
-
-
-const verifyData =
-await verifyResponse.json();
-
-
-if(!verifyResponse.ok){
-
-throw new Error(
-verifyData.detail ||
-"Payment verification failed."
-);
-
-}
-
-
-alert(
-"🎉 Business payment successful!"
-);
-
-status.innerText =
-"✅ Payment verified successfully.";
-
-}
-
-};
-
-
-if(!window.Razorpay){
-
-throw new Error(
-"Razorpay checkout failed to load."
-);
-
-}
-
-
-const razorpay =
-new Razorpay(options);
-
-razorpay.open();
-
-
-}catch(error){
-
-console.error(error);
-
-status.innerText =
-"❌ " +
-(error.message ||
-"Payment could not be started.");
-
-}
-
-}
-
-
-/* =========================
-   SCROLL UPLOADER
-========================= */
-
-function scrollToUploader(){
-
-document
-.getElementById("home")
-.scrollIntoView({
-behavior:"smooth"
-});
-
-}
-
-
-/* =========================
-   FAQ
-========================= */
-
-function faq(button){
-
-const item =
-button.closest(
-".faq-item"
-);
-
-if(!item)return;
-
-item.classList.toggle(
-"open"
-);
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-async function logout(){
-
-try{
-
-await supabaseClient.auth.signOut();
-
-document.getElementById(
-"appBox"
-).style.display =
-"none";
-
-document.getElementById(
-"authBox"
-).style.display =
-"block";
-
-document.getElementById(
-"authMessage"
-).innerText =
-"Logged out successfully.";
-
-}catch(error){
-
-console.error(error);
-
-}
-
-}
-
-
-/* =========================
-   AUTH STATE
-========================= */
-
-supabaseClient.auth.onAuthStateChange(
-function(event,session){
-
-if(session && session.user){
+await supabaseClient.auth.getSession();
+
+if(
+result.data &&
+result.data.session &&
+result.data.session.user
+){
 
 showApp(
-session.user
+result.data.session.user
 );
 
 }
 
-}
-);
-
-
-/* =========================
-   PAGE LOAD
-========================= */
-
-document.addEventListener(
-"DOMContentLoaded",
-function(){
-
-checkUser();
-
-}
-);
-
-
-/* =========================
-   GLOBAL ERROR DISPLAY
-========================= */
-
-window.addEventListener(
-"error",
-function(event){
+}catch(error){
 
 console.error(
-"JavaScript Error:",
-event.error ||
-event.message
+"Session check error:",
+error
 );
-
-const msg =
-document.getElementById(
-"authMessage"
-);
-
-if(msg &&
-!document.getElementById(
-"appBox"
-).style.display){
-
-msg.innerText =
-"⚠️ App error. Please refresh the page.";
 
 }
 
 }
-);
-
-</script>
-
-</body>
-</html>
-}
 
 
-   
+/* =====================
