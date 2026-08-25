@@ -633,94 +633,163 @@ wrap.style.display = "block";
 
 function processVideo(){
 
-    const fileInput = document.getElementById("videoFile");
-    const status = document.getElementById("status");
+const fileInput =
+document.getElementById("videoFile");
 
-    const file = fileInput.files[0];
+const status =
+document.getElementById("status");
 
-    if(!file){
-        status.innerText = "Please select a video first.";
-        return;
-    }
+const file =
+fileInput.files[0];
 
-    status.innerText = "⏳ Uploading video... Please wait.";
+if(!file){
 
-    const formData = new FormData();
+status.innerText =
+"Please select a video first.";
 
-    formData.append("video", file);
+return;
 
-    formData.append("x", "0");
-    formData.append("y", "0");
-    formData.append("w", "0");
-    formData.append("h", "0");
+}
 
-    formData.append("enhance", "true");
-    formData.append("audio_clean", "true");
+status.innerText =
+"⏳ Uploading video... Please wait.";
 
-    fetch("/process-video", {
-        method: "POST",
-        body: formData
-    })
-    .then(async response => {
+const formData =
+new FormData();
 
-        const data = await response.json();
+formData.append(
+"video",
+file
+);
 
-        if(!response.ok){
-            throw new Error(
-                data.detail ||
-                data.error ||
-                "Video processing failed"
-            );
-        }
+formData.append(
+"x",
+"0"
+);
 
-        return data;
+formData.append(
+"y",
+"0"
+);
 
-    })
-    .then(data => {
+formData.append(
+"w",
+"0"
+);
 
-        if(!data.job){
-            throw new Error("No job ID received from server.");
-        }
+formData.append(
+"h",
+"0"
+);
 
-        status.innerText =
-            "✅ Video processed successfully!";
+formData.append(
+"enhance",
+"true"
+);
 
-        const downloadButton =
-            document.createElement("a");
+formData.append(
+"audio_clean",
+"true"
+);
 
-        downloadButton.href =
-            "/download/" + data.job;
 
-        downloadButton.download =
-            "VideoClean-AI.mp4";
+/* =========================
+   BACKEND PROCESS ROUTE
+========================= */
 
-        downloadButton.innerText =
-            "⬇️ Download Clean Video";
+fetch("/process", {
+method:"POST",
+body:formData
+})
 
-        downloadButton.style.display = "block";
-        downloadButton.style.textAlign = "center";
-        downloadButton.style.padding = "16px";
-        downloadButton.style.marginTop = "15px";
-        downloadButton.style.borderRadius = "14px";
-        downloadButton.style.background =
-            "linear-gradient(90deg,#08d7f3,#447cff,#873eff)";
-        downloadButton.style.color = "#fff";
-        downloadButton.style.textDecoration = "none";
-        downloadButton.style.fontWeight = "900";
+.then(async response => {
 
-        document.getElementById("appBox")
-            .appendChild(downloadButton);
+const data =
+await response.json();
 
-    })
-    .catch(error => {
+if(!response.ok){
 
-        console.error(error);
+throw new Error(
+data.detail ||
+data.error ||
+"Video processing failed"
+);
 
-        status.innerText =
-            "❌ " + (error.message || "Processing failed.");
+}
 
-    });
-           }
+return data;
+
+})
+
+.then(data => {
+
+if(!data.job){
+
+throw new Error(
+"No job ID received from server."
+);
+
+}
+
+status.innerText =
+"✅ Video processed successfully!";
+
+const downloadButton =
+document.createElement("a");
+
+downloadButton.href =
+"/download/" + data.job;
+
+downloadButton.download =
+"VideoClean-AI.mp4";
+
+downloadButton.innerText =
+"⬇️ Download Clean Video";
+
+downloadButton.style.display =
+"block";
+
+downloadButton.style.textAlign =
+"center";
+
+downloadButton.style.padding =
+"16px";
+
+downloadButton.style.marginTop =
+"15px";
+
+downloadButton.style.borderRadius =
+"14px";
+
+downloadButton.style.background =
+"linear-gradient(90deg,#08d7f3,#447cff,#873eff)";
+
+downloadButton.style.color =
+"#fff";
+
+downloadButton.style.textDecoration =
+"none";
+
+downloadButton.style.fontWeight =
+"900";
+
+document.getElementById("appBox")
+.appendChild(downloadButton);
+
+})
+
+.catch(error => {
+
+console.error(error);
+
+status.innerText =
+"❌ " +
+(error.message ||
+"Processing failed.");
+
+});
+
+}
 
 
 /* =========================
