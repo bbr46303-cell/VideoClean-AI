@@ -1,38 +1,195 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>VideoClean AI</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#050505;color:#fff;font-family:Arial,Helvetica,sans-serif;line-height:1.55}a{text-decoration:none;color:inherit}.container{width:min(1120px,92%);margin:auto}header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.94);backdrop-filter:blur(12px);border-bottom:1px solid #1c1c1c}.nav{height:82px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:36px;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(90deg,#08d8ff,#596cff,#9b3cff);-webkit-background-clip:text;background-clip:text;color:transparent}.menu-btn{border:0;background:none;color:#fff;font-size:34px;cursor:pointer}.menu{display:none;position:absolute;right:4%;top:82px;width:min(330px,92vw);padding:25px;background:#0d0d0d;border:1px solid #252525;border-radius:0 0 20px 20px;box-shadow:0 20px 60px rgba(0,0,0,.7)}.menu.open{display:flex;flex-direction:column;gap:8px}.menu a{padding:15px 16px;color:#ddd;font-size:18px;border-radius:12px}.menu a:hover{background:#171717;color:#fff}.menu .login-link{text-align:center;color:#fff;background:linear-gradient(90deg,#0bd8ff,#7955ff);border-radius:30px}.hero{text-align:center;padding:78px 0 40px}.hero h1{margin:0 auto 24px;font-size:clamp(42px,8vw,82px);line-height:1.03;font-weight:900;letter-spacing:-3px}.gradient{background:linear-gradient(90deg,#00d9ff,#6174ff,#9b39ff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{max-width:760px;margin:auto;color:#d2d2d2;font-size:20px}.card{background:#121212;border:1px solid #242424;border-radius:28px;box-shadow:0 15px 50px rgba(0,0,0,.28)}.upload-card{padding:28px;margin:35px auto 70px;max-width:900px}.drop{min-height:250px;border:2px dashed #383838;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px;cursor:pointer;background:#101010}.drop:hover{border-color:#1ed9ff}.upload-icon{font-size:48px;margin-bottom:10px}.drop strong{font-size:22px}.drop span{color:#777}.file-name{margin:16px 0;color:#aaa;word-break:break-word}input[type=file]{display:none}.primary{width:100%;border:0;border-radius:32px;padding:18px 22px;font-size:19px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(90deg,#08d7f3,#447cff,#873eff)}.primary:disabled{opacity:.55;cursor:not-allowed}.status{text-align:center;margin-top:18px;color:#bbb;min-height:28px}.section{padding:55px 0}.section-title{text-align:center;font-size:clamp(34px,6vw,58px);margin:0 0 40px;font-weight:900}.grid,.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.feature,.plan{padding:30px}.feature h3,.plan h3{font-size:24px;margin:12px 0}.feature p{color:#aaa;margin:0}.icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#08d8ff,#7a4cff);font-size:25px}.plan{position:relative}.plan.popular{border-color:#18d9ff;box-shadow:0 0 35px rgba(0,210,255,.09)}.badge{display:inline-block;padding:7px 12px;border-radius:20px;background:linear-gradient(90deg,#08d8ff,#764cff);font-weight:800;font-size:13px}.price{font-size:55px;font-weight:900;line-height:1.05;margin:10px 0}.plan small{color:#999;font-size:16px}.plan ul{list-style:none;padding:15px 0;margin:0}.plan li{padding:9px 0;color:#aaa}.plan li::before{content:"✓";color:#21d8ff;font-weight:900;margin-right:10px}.outline{width:100%;padding:15px;border-radius:30px;background:transparent;color:#fff;border:2px solid #12d9f5;font-size:17px;font-weight:700;cursor:pointer}.faq{max-width:900px;margin:auto}.faq-item{margin-bottom:14px;overflow:hidden}.faq-q{width:100%;border:0;background:#171b20;color:#fff;text-align:left;padding:25px;font-size:20px;font-weight:800;cursor:pointer;display:flex;justify-content:space-between;gap:20px}.faq-a{display:none;padding:0 25px 25px;background:#171b20;color:#aaa}.faq-item.open .faq-a{display:block}.faq-item.open .arrow{transform:rotate(180deg)}.arrow{color:#3f99ff;transition:.2s}.field{width:100%;padding:15px;margin:8px 0;border-radius:12px;border:1px solid #303030;background:#090909;color:#fff;font-size:16px}.secondary{width:100%;padding:14px;border:1px solid #333;background:#191919;color:#fff;border-radius:12px;font-size:16px;cursor:pointer;margin-top:10px}.auth-msg{text-align:center;color:#aaa;margin-top:14px}.logout{background:#e45454;border:0;color:#fff;border-radius:14px;width:100%;padding:15px;font-size:17px;font-weight:800;cursor:pointer}.user-email{color:#aaa;margin-bottom:18px}hr{border:0;border-top:1px solid #333;margin:28px 0}footer{border-top:1px solid #1d1d1d;padding:45px 0 30px;text-align:center;color:#777}.footer-links{display:flex;justify-content:center;gap:25px;flex-wrap:wrap;margin-bottom:22px}.footer-links a:hover{color:#fff}.disclaimer{max-width:900px;margin:25px auto;padding:22px;text-align:left;border-left:4px solid #ff4d68;background:#111;border-radius:0 14px 14px 0;color:#999}@media(max-width:800px){.grid,.pricing-grid{grid-template-columns:1fr}.hero{padding-top:55px}.hero p{font-size:17px}.upload-card{padding:16px}.drop{min-height:220px}.logo{font-size:30px}.nav{height:70px}.menu{top:70px}}
-</style></head>
-<body>
-<header><div class="container nav"><a class="logo" href="#home">VideoClean AI</a><button class="menu-btn" onclick="toggleMenu()">☰</button></div><nav class="menu" id="menu"><a href="#home" onclick="closeMenu()">Home</a><a href="#features" onclick="closeMenu()">Features</a><a href="#pricing" onclick="closeMenu()">Pricing</a><a href="#faq" onclick="closeMenu()">FAQ</a><a href="#support" onclick="closeMenu()">Support</a><a class="login-link" href="#home" onclick="closeMenu()">Login</a></nav></header>
-<main id="home">
-<section class="hero container"><h1>Video<span class="gradient">Clean</span> AI</h1><p>Professional video cleanup • Enhancement • Audio cleanup</p></section>
-<section class="container"><div class="card upload-card">
-<div id="authBox"><h2 style="text-align:center">Login / Create Account</h2><input class="field" id="email" type="email" placeholder="Email address"><input class="field" id="password" type="password" placeholder="Password"><button class="primary" id="authButton" onclick="login()">Login</button><button class="secondary" onclick="toggleAuth()">Create new account</button><div class="auth-msg" id="authMessage"></div></div>
-<div id="appBox" style="display:none"><h2 style="font-size:32px;margin-top:0">Welcome to VideoClean AI 👋</h2><div class="user-email" id="userEmail"></div><button class="logout" onclick="logout()">Logout</button><hr><h2>Video Cleaner</h2><label class="drop" for="videoFile"><div class="upload-icon">📤</div><strong>Drag video or <span style="color:#21d8ff">Browse</span></strong><span>Upload your supported video file</span><div class="file-name" id="fileName">No file selected</div></label><input id="videoFile" type="file" accept="video/*" onchange="showFileName()"><button class="primary" id="processButton" onclick="processVideo()" style="margin-top:15px">✨ Process Video</button><div class="status" id="status"></div></div>
-</div></section>
-<section class="section container" id="features"><h2 class="section-title">Powerful <span class="gradient">Video Tools</span></h2><div class="grid"><div class="card feature"><div class="icon">✨</div><h3>Video Enhancement</h3><p>Improve your uploaded video through the connected processing workflow.</p></div><div class="card feature"><div class="icon">🎧</div><h3>Audio Cleanup</h3><p>Use the audio-cleaning option supported by your backend.</p></div><div class="card feature"><div class="icon">⚡</div><h3>Fast Processing</h3><p>Simple upload-to-processing workflow with clear status feedback.</p></div></div></section>
-<section class="section container" id="pricing"><h2 class="section-title">Choose Your <span class="gradient">Plan</span></h2><div class="pricing-grid"><div class="card plan"><h3>Free</h3><div class="price">₹0</div><small>Trial access</small><ul><li>Basic processing</li><li>Limited video usage</li><li>Standard resolution</li><li>Basic support</li></ul><button class="outline" onclick="document.getElementById('home').scrollIntoView()">Get Free Access</button></div><div class="card plan popular"><span class="badge">MOST POPULAR</span><h3>Creator</h3><div class="price">₹99</div><small>per month</small><ul><li>More video processing</li><li>Enhanced processing</li><li>Audio cleanup</li><li>Priority workflow</li></ul><button class="outline" onclick="alert('Payment gateway can be connected here.')">Choose Creator</button></div><div class="card plan"><h3>Business</h3><div class="price">₹499</div><small>per month</small><ul><li>Higher monthly limits</li><li>Bulk processing</li><li>High-quality export</li><li>Business support</li></ul><button class="outline" onclick="alert('Payment gateway can be connected here.')">Get Business</button></div></div></section>
-<section class="section container" id="faq"><h2 class="section-title">Frequently Asked <span class="gradient">Questions</span></h2><div class="faq"><div class="card faq-item"><button class="faq-q" onclick="faq(this)">VideoClean AI kaise kaam karta hai? <span class="arrow">▼</span></button><div class="faq-a">Video upload karne ke baad file connected processing backend ko bheji jaati hai. Result milne par download link diya jaata hai.</div></div><div class="card faq-item"><button class="faq-q" onclick="faq(this)">Video process hone mein kitna time lagta hai? <span class="arrow">▼</span></button><div class="faq-a">Time video ki length, size aur backend load par depend karta hai.</div></div><div class="card faq-item"><button class="faq-q" onclick="faq(this)">Kaunse video formats upload kar sakte hain? <span class="arrow">▼</span></button><div class="faq-a">File picker common video formats accept karta hai. Actual support backend configuration par depend karega.</div></div><div class="card faq-item"><button class="faq-q" onclick="faq(this)">Kya account banana zaroori hai? <span class="arrow">▼</span></button><div class="faq-a">Current version mein processing app login ke baad available hai.</div></div></div></section>
-</main>
-<footer id="support"><div class="container"><h2 style="color:#fff">Policy & Support</h2><div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Refund Policy</a><a href="#">Contact Support</a></div><div class="disclaimer"><strong style="color:#fff">Disclaimer:</strong> VideoClean AI is a video processing and optimization tool. Users are responsible for having the necessary rights and permissions for content they upload and process.</div><p>© 2026 VideoClean AI — All rights reserved.</p></div></footer>
-<script>
-/* KEEP the same Supabase URL and public anon key from your current index.html. */
+let timerInterval=null;
+let elapsed=0;
+let previewURL=null;
 
-const SUPABASE_URL = "https://imqkvnfmampzxpvkchtp.supabase.co";
-const SUPABASE_KEY = "sb_publishable_5-t8gpTfjxFZSSAnDcSjVQ_LtgZfCRf";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let signupMode=false;
-function toggleMenu(){document.getElementById('menu').classList.toggle('open')}function closeMenu(){document.getElementById('menu').classList.remove('open')}
-function toggleAuth(){signupMode=!signupMode;document.getElementById('authButton').innerText=signupMode?'Sign Up':'Login';document.querySelector('#authBox .secondary').innerText=signupMode?'Back to Login':'Create new account';document.getElementById('authMessage').innerText=''}
-async function login(){const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value,msg=document.getElementById('authMessage');if(!email||!password){msg.innerText='Please enter email and password.';return}msg.innerText=signupMode?'Creating account...':'Logging in...';let result=signupMode?await supabaseClient.auth.signUp({email,password}):await supabaseClient.auth.signInWithPassword({email,password});if(result.error){msg.innerText=result.error.message;return}if(signupMode){msg.innerText='Account created. Check your email to confirm your account.'}else showApp(result.data.user)}
-function showApp(user){document.getElementById('authBox').style.display='none';document.getElementById('appBox').style.display='block';document.getElementById('userEmail').innerText='Logged in as: '+user.email}
-async function logout(){await supabaseClient.auth.signOut();document.getElementById('appBox').style.display='none';document.getElementById('authBox').style.display='block'}
-async function checkUser(){const{data}=await supabaseClient.auth.getUser();if(data.user)showApp(data.user)}
-function showFileName(){const f=document.getElementById('videoFile').files[0];document.getElementById('fileName').innerText=f?f.name:'No file selected'}
-async function processVideo(){const file=document.getElementById('videoFile').files[0],status=document.getElementById('status'),button=document.getElementById('processButton');if(!file){status.innerText='Please select a video first.';return}const formData=new FormData();formData.append('video',file);formData.append('x',0);formData.append('y',0);formData.append('w',0);formData.append('h',0);formData.append('enhance',true);formData.append('audio_clean',true);try{button.disabled=true;status.innerText='⏳ Video processing started... Please wait.';const response=await fetch('https://videoclean-ai.onrender.com/process',{method:'POST',body:formData});const result=await response.json();if(result.error){status.innerText='❌ '+result.error;return}if(result.download){status.innerHTML='✅ Processing complete. <a style="color:#20d9ff;font-weight:800" target="_blank" href="https://videoclean-ai.onrender.com'+result.download+'">Download video</a>'}else status.innerText='✅ Processing completed.'}catch(error){status.innerText='❌ Processing failed: '+error.message}finally{button.disabled=false}}
-function faq(button){button.parentElement.classList.toggle('open')}checkUser();
-</script></body></html>
+function formatTime(seconds){
+    if(!isFinite(seconds)) return "00:00";
+    seconds=Math.floor(seconds);
+    return String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
+}
+
+function showFileName(){
+    const f=document.getElementById("videoFile").files[0];
+
+    document.getElementById("fileName").innerText=
+        f ? f.name : "No file selected";
+
+    if(f){
+
+        if(previewURL){
+            URL.revokeObjectURL(previewURL);
+        }
+
+        previewURL=URL.createObjectURL(f);
+
+        const video=document.getElementById("videoPreview");
+
+        video.src=previewURL;
+
+        document.getElementById("previewWrap").style.display="block";
+
+        video.onloadedmetadata=function(){
+            document.getElementById("previewDuration").innerText=
+                formatTime(video.duration);
+        };
+    }
+}
+
+function startProgress(){
+
+    elapsed=0;
+
+    document.getElementById("progressBox").style.display="block";
+
+    document.getElementById("progressBar").style.width="0%";
+
+    document.getElementById("progressPercent").innerText="0%";
+
+    document.getElementById("timer").innerText="00:00";
+
+    timerInterval=setInterval(function(){
+
+        elapsed++;
+
+        document.getElementById("timer").innerText=
+            formatTime(elapsed);
+
+        let percent=Math.min(
+            95,
+            Math.round((elapsed/60)*95)
+        );
+
+        document.getElementById("progressBar").style.width=
+            percent+"%";
+
+        document.getElementById("progressPercent").innerText=
+            percent+"%";
+
+        if(elapsed < 60){
+
+            document.getElementById("progressText").innerText=
+                "AI processing... "+(60-elapsed)+"s remaining";
+
+        }else{
+
+            document.getElementById("progressText").innerText=
+                "Finalizing video...";
+
+        }
+
+    },1000);
+}
+
+function finishProgress(){
+
+    if(timerInterval){
+
+        clearInterval(timerInterval);
+
+        timerInterval=null;
+    }
+
+    document.getElementById("progressBar").style.width="100%";
+
+    document.getElementById("progressPercent").innerText="100%";
+
+    document.getElementById("progressText").innerText=
+        "Processing complete ✓";
+}
+
+async function processVideo(){
+
+    const file=document.getElementById("videoFile").files[0];
+
+    const status=document.getElementById("status");
+
+    const button=document.getElementById("processButton");
+
+    if(!file){
+
+        status.innerText="Please select a video first.";
+
+        return;
+    }
+
+    const formData=new FormData();
+
+    formData.append("video",file);
+    formData.append("x",0);
+    formData.append("y",0);
+    formData.append("w",0);
+    formData.append("h",0);
+    formData.append("enhance",true);
+    formData.append("audio_clean",true);
+
+    try{
+
+        button.disabled=true;
+
+        status.innerText=
+            "⏳ Processing started. Please wait...";
+
+        startProgress();
+
+        const video=document.getElementById("videoPreview");
+
+        if(video.src){
+
+            video.currentTime=0;
+
+            video.play().catch(function(){});
+
+        }
+
+        const response=await fetch(
+            "https://videoclean-ai.onrender.com/process",
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+        const result=await response.json();
+
+        finishProgress();
+
+        if(result.error){
+
+            status.innerText="❌ "+result.error;
+
+            return;
+        }
+
+        if(result.download){
+
+            status.innerHTML=
+                '✅ Processing complete. '+
+                '<a style="color:#20d9ff;font-weight:800" target="_blank" href="https://videoclean-ai.onrender.com'+
+                result.download+
+                '">Download video</a>';
+
+        }else{
+
+            status.innerText=
+                "✅ Processing completed.";
+
+        }
+
+    }catch(error){
+
+        if(timerInterval){
+
+            clearInterval(timerInterval);
+
+            timerInterval=null;
+        }
+
+        status.innerText=
+            "❌ Processing failed: "+error.message;
+
+    }finally{
+
+        button.disabled=false;
+
+    }
+}
