@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VideoClean AI</title>
+<style>
+body{font-family:Arial;margin:0;background:#0b1020;color:#fff}.wrap{max-width:850px;margin:auto;padding:24px}.card{background:#141c30;padding:20px;border-radius:18px;margin:14px 0}h1 span{color:#5eead4}
+button{padding:12px 16px;border:0;border-radius:10px;font-weight:700;margin:6px 4px 6px 0;cursor:pointer}.primary{background:#5eead4}.dark{background:#2a3550;color:white}
+input{margin:8px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{background:#0e1628;padding:14px;border-radius:12px}video{width:100%;max-height:430px;margin-top:14px;border-radius:12px}
+small{color:#aab5cc}@media(max-width:650px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+<h1>Video<span>Clean</span> AI</h1><p><small>Logo removal • Enhancement • Audio cleanup</small></p>
+<div class="card">
+<input id="file" type="file" accept="video/*"><br>
+<div class="grid">
+<div class="box"><b>Logo / Watermark</b><br><small>Fixed rectangle coordinates (pixels)</small><br>
+<input id="x" type="number" placeholder="X"><input id="y" type="number" placeholder="Y"><br>
+<input id="w" type="number" placeholder="Width"><input id="h" type="number" placeholder="Height"></div>
+<div class="box"><label><input id="enhance" type="checkbox" checked> Video enhancement</label><br>
+<label><input id="audio" type="checkbox" checked> Audio cleanup</label></div></div>
+<button class="primary" onclick="processVideo()">✨ Process Video</button>
+<div id="msg"></div><video id="out" controls hidden></video><br>
+<a id="download" hidden><button class="dark">⬇️ Download Clean Video</button></a>
+</div></div>
+<script>
+const API="http://localhost:8000";
+async function processVideo(){
+ const f=document.getElementById('file').files[0]; if(!f){alert('Video select karein');return;}
+ const fd=new FormData(); fd.append('video',f);
+ ['x','y','w','h'].forEach(id=>fd.append(id,document.getElementById(id).value||0));
+ fd.append('enhance',document.getElementById('enhance').checked);
+ fd.append('audio_clean',document.getElementById('audio').checked);
+ const m=document.getElementById('msg'); m.textContent='Processing...';
+ try{
+  const r=await fetch(API+'/process',{method:'POST',body:fd}); const j=await r.json();
+  if(j.error){m.textContent=j.error;return;}
+  const url=API+j.download; document.getElementById('out').src=url; document.getElementById('out').hidden=false;
+  const a=document.getElementById('download'); a.href=url; a.download='VideoClean_AI_output.mp4'; a.hidden=false;
+  m.textContent='✅ Processing complete';
+ }catch(e){m.textContent='Backend connect nahi hua. Pehle FastAPI server start karein.';}
+}
+</script></body></html>
