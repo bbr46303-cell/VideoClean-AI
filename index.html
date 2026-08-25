@@ -22,7 +22,7 @@ small{color:#aab5cc}@media(max-width:650px){.grid{grid-template-columns:1fr}}
 <a id="download" hidden><button class="dark">⬇️ Download Clean Video</button></a>
 </div></div>
 <script>
-const API="http://localhost:8000";
+const API="";
 async function processVideo(){
  const f=document.getElementById('file').files[0]; if(!f){alert('Video select karein');return;}
  const fd=new FormData(); fd.append('video',f);
