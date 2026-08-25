@@ -117,7 +117,6 @@ async def create_order(data: dict):
             detail="Razorpay is not configured"
         )
 
-
     try:
 
         amount = int(
@@ -134,7 +133,6 @@ async def create_order(data: dict):
             detail="Invalid amount"
         )
 
-
     if amount < 100:
 
         raise HTTPException(
@@ -142,18 +140,15 @@ async def create_order(data: dict):
             detail="Minimum payment amount is 100 paise"
         )
 
-
     currency = data.get(
         "currency",
         "INR"
     )
 
-
     receipt = data.get(
         "receipt",
         f"receipt_{uuid.uuid4().hex[:12]}"
     )
-
 
     try:
 
@@ -167,7 +162,6 @@ async def create_order(data: dict):
 
         })
 
-
         return {
 
             "order_id": order["id"],
@@ -178,11 +172,9 @@ async def create_order(data: dict):
 
         }
 
-
     except Exception as e:
 
         error_text = str(e).lower()
-
 
         if (
             "authentication" in error_text
@@ -194,7 +186,6 @@ async def create_order(data: dict):
                 status_code=401,
                 detail="Razorpay authentication failed"
             )
-
 
         raise HTTPException(
             status_code=500,
@@ -216,7 +207,6 @@ async def verify_payment(data: dict):
             detail="Razorpay secret is not configured"
         )
 
-
     payment_id = data.get(
         "razorpay_payment_id"
     )
@@ -229,14 +219,12 @@ async def verify_payment(data: dict):
         "razorpay_signature"
     )
 
-
     if not payment_id or not order_id or not signature:
 
         raise HTTPException(
             status_code=400,
             detail="Missing payment verification fields"
         )
-
 
     generated_signature = hmac.new(
 
@@ -252,7 +240,6 @@ async def verify_payment(data: dict):
 
     ).hexdigest()
 
-
     if not hmac.compare_digest(
         generated_signature,
         signature
@@ -262,7 +249,6 @@ async def verify_payment(data: dict):
             status_code=400,
             detail="Payment signature verification failed"
         )
-
 
     return {
 
@@ -281,7 +267,7 @@ async def verify_payment(data: dict):
 
 
 # ==========================================
-# PROCESS VIDEO
+# PROCESS VIDEO - FAST VERSION
 # ==========================================
 
 @APP.post("/process-video")
@@ -318,14 +304,13 @@ async def process_video(
         video.filename or "video.mp4"
     ).name
 
-
     src = IN / f"{job}_{filename}"
 
     dst = OUT / f"{job}.mp4"
 
 
     # --------------------------------------
-    # SAVE UPLOADED VIDEO
+    # SAVE VIDEO
     # --------------------------------------
 
     try:
@@ -334,7 +319,7 @@ async def process_video(
             await video.read()
         )
 
-    except Exception as e:
+    except Exception:
 
         raise HTTPException(
             status_code=500,
@@ -343,7 +328,7 @@ async def process_video(
 
 
     # --------------------------------------
-    # VIDEO FILTERS
+    # FAST VIDEO FILTER
     # --------------------------------------
 
     vf = []
@@ -352,10 +337,13 @@ async def process_video(
     if enhance:
 
         vf.append(
-            "hqdn3d=1.2:1.2:6:6,"
-            "eq=contrast=1.04:saturation=1.05"
+            "eq=contrast=1.03:saturation=1.03"
         )
 
+
+    # --------------------------------------
+    # OPTIONAL LOGO REMOVAL
+    # --------------------------------------
 
     if w > 0 and h > 0:
 
@@ -372,7 +360,7 @@ async def process_video(
 
 
     # --------------------------------------
-    # FFMPEG COMMAND
+    # FFMPEG
     # --------------------------------------
 
     cmd = [
@@ -399,7 +387,7 @@ async def process_video(
 
 
     # --------------------------------------
-    # AUDIO CLEANUP
+    # AUDIO
     # --------------------------------------
 
     if audio_clean:
@@ -408,15 +396,13 @@ async def process_video(
 
             "-af",
 
-            "highpass=f=80,"
-            "lowpass=f=16000,"
-            "afftdn"
+            "highpass=f=80,lowpass=f=16000"
 
         ]
 
 
     # --------------------------------------
-    # OUTPUT SETTINGS
+    # FAST OUTPUT
     # --------------------------------------
 
     cmd += [
@@ -425,13 +411,16 @@ async def process_video(
         "libx264",
 
         "-preset",
-        "veryfast",
+        "ultrafast",
 
         "-crf",
-        "23",
+        "26",
 
         "-c:a",
         "aac",
+
+        "-b:a",
+        "128k",
 
         "-movflags",
         "+faststart",
@@ -442,12 +431,12 @@ async def process_video(
 
 
     # --------------------------------------
-    # RUN FFMPEG
+    # PROCESS
     # --------------------------------------
 
     try:
 
-        result = subprocess.run(
+        subprocess.run(
 
             cmd,
 
@@ -459,10 +448,9 @@ async def process_video(
 
         )
 
-
     except subprocess.CalledProcessError as e:
 
-        error_details = (
+        details = (
             e.stderr
             .decode(
                 errors="ignore"
@@ -470,14 +458,13 @@ async def process_video(
             [-2000:]
         )
 
-
         return {
 
             "error":
                 "FFmpeg processing failed",
 
             "details":
-                error_details
+                details
 
         }
 
@@ -499,6 +486,21 @@ async def process_video(
 
 
     # --------------------------------------
+    # DELETE ORIGINAL
+    # --------------------------------------
+
+    try:
+
+        src.unlink(
+            missing_ok=True
+        )
+
+    except Exception:
+
+        pass
+
+
+    # --------------------------------------
     # SUCCESS
     # --------------------------------------
 
@@ -515,14 +517,11 @@ async def process_video(
 
 
 # ==========================================
-# DOWNLOAD PROCESSED VIDEO
+# DOWNLOAD
 # ==========================================
 
 @APP.get("/download/{job}")
 def download(job: str):
-
-    # Security:
-    # Only allow the generated UUID job name.
 
     if not job.isalnum():
 
@@ -538,10 +537,6 @@ def download(job: str):
     p = OUT / f"{job}.mp4"
 
 
-    # --------------------------------------
-    # FILE NOT FOUND
-    # --------------------------------------
-
     if not p.exists():
 
         raise HTTPException(
@@ -552,10 +547,6 @@ def download(job: str):
 
         )
 
-
-    # --------------------------------------
-    # DOWNLOAD FILE
-    # --------------------------------------
 
     return FileResponse(
 
@@ -582,4 +573,4 @@ def health():
 
         "service": "VideoClean AI"
 
-        }
+    }
