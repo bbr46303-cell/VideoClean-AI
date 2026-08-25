@@ -6,6 +6,7 @@
 <title>VideoClean AI</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <style>
 *{box-sizing:border-box}
@@ -14,107 +15,589 @@ body{margin:0;background:#050505;color:#fff;font-family:Arial,Helvetica,sans-ser
 a{text-decoration:none;color:inherit}
 .container{width:min(1120px,92%);margin:auto}
 
-header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.94);backdrop-filter:blur(12px);border-bottom:1px solid #1c1c1c}
-.nav{height:82px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:36px;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(90deg,#08d8ff,#596cff,#9b3cff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.menu-btn{border:0;background:none;color:#fff;font-size:34px;cursor:pointer}
+header{
+position:sticky;
+top:0;
+z-index:1000;
+background:rgba(5,5,5,.94);
+backdrop-filter:blur(12px);
+border-bottom:1px solid #1c1c1c
+}
 
-.menu{display:none;position:absolute;right:4%;top:82px;width:min(330px,92vw);padding:25px;background:#0d0d0d;border:1px solid #252525;border-radius:0 0 20px 20px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
-.menu.open{display:flex;flex-direction:column;gap:8px}
-.menu a{padding:15px 16px;color:#ddd;font-size:18px;border-radius:12px}
-.menu a:hover{background:#171717;color:#fff}
+.nav{
+height:82px;
+display:flex;
+align-items:center;
+justify-content:space-between
+}
 
-.hero{text-align:center;padding:70px 0 35px}
-.hero h1{margin:0 auto 20px;font-size:clamp(42px,8vw,82px);line-height:1.03;font-weight:900;letter-spacing:-3px}
-.gradient{background:linear-gradient(90deg,#00d9ff,#6174ff,#9b39ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{max-width:760px;margin:auto;color:#d2d2d2;font-size:20px}
+.logo{
+font-size:36px;
+font-weight:900;
+letter-spacing:-1.5px;
+background:linear-gradient(90deg,#08d8ff,#596cff,#9b3cff);
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent
+}
 
-.card{background:#121212;border:1px solid #242424;border-radius:28px;box-shadow:0 15px 50px rgba(0,0,0,.28)}
-.upload-card{padding:28px;margin:35px auto 70px;max-width:900px}
+.menu-btn{
+border:0;
+background:none;
+color:#fff;
+font-size:34px;
+cursor:pointer
+}
 
-.field{width:100%;padding:15px;margin:8px 0;border-radius:12px;border:1px solid #303030;background:#090909;color:#fff;font-size:16px}
+.menu{
+display:none;
+position:absolute;
+right:4%;
+top:82px;
+width:min(330px,92vw);
+padding:25px;
+background:#0d0d0d;
+border:1px solid #252525;
+border-radius:0 0 20px 20px;
+box-shadow:0 20px 60px rgba(0,0,0,.7)
+}
 
-.primary{width:100%;border:0;border-radius:32px;padding:18px 22px;font-size:19px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(90deg,#08d7f3,#447cff,#873eff)}
-.primary:disabled{opacity:.55;cursor:not-allowed}
+.menu.open{
+display:flex;
+flex-direction:column;
+gap:8px
+}
 
-.secondary{width:100%;padding:14px;border:1px solid #333;background:#191919;color:#fff;border-radius:12px;font-size:16px;cursor:pointer;margin-top:10px}
-.auth-msg{text-align:center;color:#aaa;margin-top:14px}
+.menu a{
+padding:15px 16px;
+color:#ddd;
+font-size:18px;
+border-radius:12px
+}
 
-.drop{min-height:220px;border:2px dashed #383838;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px;cursor:pointer;background:#101010}
-.drop:hover{border-color:#1ed9ff}
-.upload-icon{font-size:48px;margin-bottom:10px}
-.drop strong{font-size:22px}
-.drop span{color:#777}
-.file-name{margin:16px 0;color:#aaa;word-break:break-word}
-input[type=file]{display:none}
+.menu a:hover{
+background:#171717;
+color:#fff
+}
+
+.hero{
+text-align:center;
+padding:70px 0 35px
+}
+
+.hero h1{
+margin:0 auto 20px;
+font-size:clamp(42px,8vw,82px);
+line-height:1.03;
+font-weight:900;
+letter-spacing:-3px
+}
+
+.gradient{
+background:linear-gradient(90deg,#00d9ff,#6174ff,#9b39ff);
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+color:#d2d2d2;
+font-size:20px
+}
+
+.card{
+background:#121212;
+border:1px solid #242424;
+border-radius:28px;
+box-shadow:0 15px 50px rgba(0,0,0,.28)
+}
+
+.upload-card{
+padding:28px;
+margin:35px auto 70px;
+max-width:900px
+}
+
+.field{
+width:100%;
+padding:15px;
+margin:8px 0;
+border-radius:12px;
+border:1px solid #303030;
+background:#090909;
+color:#fff;
+font-size:16px
+}
+
+.primary{
+width:100%;
+border:0;
+border-radius:32px;
+padding:18px 22px;
+font-size:19px;
+font-weight:800;
+color:#fff;
+cursor:pointer;
+background:linear-gradient(90deg,#08d7f3,#447cff,#873eff)
+}
+
+.primary:disabled{
+opacity:.55;
+cursor:not-allowed
+}
+
+.secondary{
+width:100%;
+padding:14px;
+border:1px solid #333;
+background:#191919;
+color:#fff;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+margin-top:10px
+}
+
+.auth-msg{
+text-align:center;
+color:#aaa;
+margin-top:14px;
+min-height:25px
+}
+
+.drop{
+min-height:220px;
+border:2px dashed #383838;
+border-radius:24px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:25px;
+cursor:pointer;
+background:#101010
+}
+
+.drop:hover{
+border-color:#1ed9ff
+}
+
+.upload-icon{
+font-size:48px;
+margin-bottom:10px
+}
+
+.drop strong{
+font-size:22px
+}
+
+.drop span{
+color:#777
+}
+
+.file-name{
+margin:16px 0;
+color:#aaa;
+word-break:break-word
+}
+
+input[type=file]{
+display:none
+}
+
 
 /* VIDEO PREVIEW */
-.preview-wrap{display:none;margin-top:20px;background:#080808;border:1px solid #292929;border-radius:20px;padding:12px;overflow:hidden}
-.preview-wrap video{width:100%;max-height:430px;display:block;background:#000;border-radius:14px}
-.video-info{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;color:#aaa;font-size:15px}
-.video-time{color:#20d9ff;font-weight:800}
+
+.preview-wrap{
+display:none;
+margin-top:20px;
+background:#080808;
+border:1px solid #292929;
+border-radius:20px;
+padding:12px;
+overflow:hidden
+}
+
+.preview-wrap video{
+width:100%;
+max-height:430px;
+display:block;
+background:#000;
+border-radius:14px
+}
+
+.video-info{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-top:10px;
+color:#aaa;
+font-size:15px
+}
+
+.video-time{
+color:#20d9ff;
+font-weight:800
+}
+
 
 /* PROCESSING */
-.progress-box{display:none;margin-top:20px;background:#0d0d0d;border:1px solid #292929;border-radius:18px;padding:18px}
-.progress-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-.progress-title{font-weight:800}
-.progress-percent{color:#20d9ff;font-weight:900}
-.progress-track{width:100%;height:14px;background:#252525;border-radius:20px;overflow:hidden}
-.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#08d7f3,#447cff,#873eff);border-radius:20px;transition:width .5s ease}
-.processing-info{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px}
-.processing-text{color:#aaa}
-.processing-timer{color:#20d9ff;font-size:20px;font-weight:900}
-.status{text-align:center;margin-top:18px;color:#bbb;min-height:28px}
+
+.progress-box{
+display:none;
+margin-top:20px;
+background:#0d0d0d;
+border:1px solid #292929;
+border-radius:18px;
+padding:18px
+}
+
+.progress-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:12px
+}
+
+.progress-title{
+font-weight:800
+}
+
+.progress-percent{
+color:#20d9ff;
+font-weight:900
+}
+
+.progress-track{
+width:100%;
+height:14px;
+background:#252525;
+border-radius:20px;
+overflow:hidden
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#08d7f3,#447cff,#873eff);
+border-radius:20px;
+transition:width .5s ease
+}
+
+.processing-info{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:12px;
+gap:10px
+}
+
+.processing-text{
+color:#aaa
+}
+
+.processing-timer{
+color:#20d9ff;
+font-size:20px;
+font-weight:900
+}
+
+.status{
+text-align:center;
+margin-top:18px;
+color:#bbb;
+min-height:28px
+}
+
 
 /* OFFER */
-.offer-box{display:none;margin-top:20px;padding:24px;background:#111;border:2px solid #20d9ff;border-radius:22px;text-align:center}
-.offer-badge{display:inline-block;padding:7px 14px;border-radius:20px;background:linear-gradient(90deg,#08d8ff,#873eff);font-size:13px;font-weight:900}
-.old-price{color:#777;text-decoration:line-through;font-size:22px}
-.offer-price{font-size:52px;font-weight:900}
-.offer-button{width:100%;padding:16px;border:0;border-radius:30px;background:linear-gradient(90deg,#08d7f3,#447cff,#873eff);color:#fff;font-size:18px;font-weight:900;cursor:pointer}
+
+.offer-box{
+display:none;
+margin-top:20px;
+padding:24px;
+background:#111;
+border:2px solid #20d9ff;
+border-radius:22px;
+text-align:center
+}
+
+.offer-badge{
+display:inline-block;
+padding:7px 14px;
+border-radius:20px;
+background:linear-gradient(90deg,#08d8ff,#873eff);
+font-size:13px;
+font-weight:900
+}
+
+.old-price{
+color:#777;
+text-decoration:line-through;
+font-size:22px
+}
+
+.offer-price{
+font-size:52px;
+font-weight:900
+}
+
+.offer-button{
+width:100%;
+padding:16px;
+border:0;
+border-radius:30px;
+background:linear-gradient(90deg,#08d7f3,#447cff,#873eff);
+color:#fff;
+font-size:18px;
+font-weight:900;
+cursor:pointer
+}
+
+
+/* PAYMENT */
+
+.payment-status{
+display:none;
+margin-top:15px;
+padding:14px;
+border-radius:14px;
+background:#0b1518;
+border:1px solid #1f6470;
+text-align:center;
+color:#aaa
+}
+
 
 /* SECTIONS */
-.section{padding:55px 0}
-.section-title{text-align:center;font-size:clamp(34px,6vw,58px);margin:0 0 40px;font-weight:900}
-.grid,.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.feature,.plan{padding:30px}
-.feature h3,.plan h3{font-size:24px;margin:12px 0}
-.feature p{color:#aaa;margin:0}
-.icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#08d8ff,#7a4cff);font-size:25px}
-.plan{position:relative}
-.plan.popular{border-color:#18d9ff;box-shadow:0 0 35px rgba(0,210,255,.09)}
-.badge{display:inline-block;padding:7px 12px;border-radius:20px;background:linear-gradient(90deg,#08d8ff,#764cff);font-weight:800;font-size:13px}
-.price{font-size:55px;font-weight:900;line-height:1.05;margin:10px 0}
-.plan small{color:#999;font-size:16px}
-.plan ul{list-style:none;padding:15px 0;margin:0}
-.plan li{padding:9px 0;color:#aaa}
-.plan li::before{content:"✓";color:#21d8ff;font-weight:900;margin-right:10px}
-.outline{width:100%;padding:15px;border-radius:30px;background:transparent;color:#fff;border:2px solid #12d9f5;font-size:17px;font-weight:700;cursor:pointer}
+
+.section{
+padding:55px 0
+}
+
+.section-title{
+text-align:center;
+font-size:clamp(34px,6vw,58px);
+margin:0 0 40px;
+font-weight:900
+}
+
+.grid,
+.pricing-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:22px
+}
+
+.feature,
+.plan{
+padding:30px
+}
+
+.feature h3,
+.plan h3{
+font-size:24px;
+margin:12px 0
+}
+
+.feature p{
+color:#aaa;
+margin:0
+}
+
+.icon{
+width:52px;
+height:52px;
+border-radius:16px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#08d8ff,#7a4cff);
+font-size:25px
+}
+
+.plan{
+position:relative
+}
+
+.plan.popular{
+border-color:#18d9ff;
+box-shadow:0 0 35px rgba(0,210,255,.09)
+}
+
+.badge{
+display:inline-block;
+padding:7px 12px;
+border-radius:20px;
+background:linear-gradient(90deg,#08d8ff,#764cff);
+font-weight:800;
+font-size:13px
+}
+
+.price{
+font-size:55px;
+font-weight:900;
+line-height:1.05;
+margin:10px 0
+}
+
+.plan small{
+color:#999;
+font-size:16px
+}
+
+.plan ul{
+list-style:none;
+padding:15px 0;
+margin:0
+}
+
+.plan li{
+padding:9px 0;
+color:#aaa
+}
+
+.plan li::before{
+content:"✓";
+color:#21d8ff;
+font-weight:900;
+margin-right:10px
+}
+
+.outline{
+width:100%;
+padding:15px;
+border-radius:30px;
+background:transparent;
+color:#fff;
+border:2px solid #12d9f5;
+font-size:17px;
+font-weight:700;
+cursor:pointer
+}
+
 
 /* FAQ */
-.faq{max-width:900px;margin:auto}
-.faq-item{margin-bottom:14px;overflow:hidden}
-.faq-q{width:100%;border:0;background:#171b20;color:#fff;text-align:left;padding:25px;font-size:20px;font-weight:800;cursor:pointer;display:flex;justify-content:space-between;gap:20px}
-.faq-a{display:none;padding:0 25px 25px;background:#171b20;color:#aaa}
-.faq-item.open .faq-a{display:block}
-.faq-item.open .arrow{transform:rotate(180deg)}
-.arrow{color:#3f99ff;transition:.2s}
+
+.faq{
+max-width:900px;
+margin:auto
+}
+
+.faq-item{
+margin-bottom:14px;
+overflow:hidden
+}
+
+.faq-q{
+width:100%;
+border:0;
+background:#171b20;
+color:#fff;
+text-align:left;
+padding:25px;
+font-size:20px;
+font-weight:800;
+cursor:pointer;
+display:flex;
+justify-content:space-between;
+gap:20px
+}
+
+.faq-a{
+display:none;
+padding:0 25px 25px;
+background:#171b20;
+color:#aaa
+}
+
+.faq-item.open .faq-a{
+display:block
+}
+
+.faq-item.open .arrow{
+transform:rotate(180deg)
+}
+
+.arrow{
+color:#3f99ff;
+transition:.2s
+}
+
 
 /* FOOTER */
-footer{border-top:1px solid #1d1d1d;padding:45px 0 30px;text-align:center;color:#777}
-.footer-links{display:flex;justify-content:center;gap:25px;flex-wrap:wrap;margin-bottom:22px}
-.disclaimer{max-width:900px;margin:25px auto;padding:22px;text-align:left;border-left:4px solid #ff4d68;background:#111;border-radius:0 14px 14px 0;color:#999}
+
+footer{
+border-top:1px solid #1d1d1d;
+padding:45px 0 30px;
+text-align:center;
+color:#777
+}
+
+.footer-links{
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+margin-bottom:22px
+}
+
+.disclaimer{
+max-width:900px;
+margin:25px auto;
+padding:22px;
+text-align:left;
+border-left:4px solid #ff4d68;
+background:#111;
+border-radius:0 14px 14px 0;
+color:#999
+}
+
 
 @media(max-width:800px){
-.grid,.pricing-grid{grid-template-columns:1fr}
-.hero{padding-top:50px}
-.hero p{font-size:17px}
-.upload-card{padding:16px}
-.logo{font-size:30px}
-.nav{height:70px}
-.menu{top:70px}
-.preview-wrap video{max-height:360px}
-.processing-info{flex-direction:column;text-align:center}
+
+.grid,
+.pricing-grid{
+grid-template-columns:1fr
+}
+
+.hero{
+padding-top:50px
+}
+
+.hero p{
+font-size:17px
+}
+
+.upload-card{
+padding:16px
+}
+
+.logo{
+font-size:30px
+}
+
+.nav{
+height:70px
+}
+
+.menu{
+top:70px
+}
+
+.preview-wrap video{
+max-height:360px
+}
+
+.processing-info{
+flex-direction:column;
+text-align:center
+}
+
 }
 </style>
 </head>
@@ -122,50 +605,103 @@ footer{border-top:1px solid #1d1d1d;padding:45px 0 30px;text-align:center;color:
 <body>
 
 <header>
+
 <div class="container nav">
-<a class="logo" href="#home">VideoClean AI</a>
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<a class="logo" href="#home">
+VideoClean AI
+</a>
+
+<button class="menu-btn" onclick="toggleMenu()">
+☰
+</button>
+
 </div>
 
 <nav class="menu" id="menu">
+
 <a href="#home" onclick="closeMenu()">Home</a>
 <a href="#features" onclick="closeMenu()">Features</a>
 <a href="#pricing" onclick="closeMenu()">Pricing</a>
 <a href="#faq" onclick="closeMenu()">FAQ</a>
 <a href="#support" onclick="closeMenu()">Support</a>
+
 </nav>
+
 </header>
+
 
 <main id="home">
 
+
 <section class="hero container">
-<h1>Video<span class="gradient">Clean</span> AI</h1>
-<p>Professional video cleanup • Enhancement • Audio cleanup</p>
+
+<h1>
+Video<span class="gradient">Clean</span> AI
+</h1>
+
+<p>
+Professional video cleanup • Enhancement • Audio cleanup
+</p>
+
 </section>
 
+
 <section class="container">
+
 <div class="card upload-card">
 
+
 <!-- LOGIN -->
+
 <div id="authBox">
 
-<h2 style="text-align:center">Login / Create Account</h2>
+<h2 style="text-align:center">
+Login / Create Account
+</h2>
 
-<input class="field" id="email" type="email" placeholder="Email address">
+<input
+class="field"
+id="email"
+type="email"
+placeholder="Email address">
 
-<input class="field" id="password" type="password" placeholder="Password">
+<input
+class="field"
+id="password"
+type="password"
+placeholder="Password">
 
-<button class="primary" id="authButton" onclick="login()">Login</button>
+<button
+class="primary"
+id="authButton"
+onclick="login()">
 
-<button class="secondary" onclick="toggleAuth()">Create new account</button>
+Login
 
-<div class="auth-msg" id="authMessage"></div>
+</button>
+
+<button
+class="secondary"
+onclick="toggleAuth()">
+
+Create new account
+
+</button>
+
+<div
+class="auth-msg"
+id="authMessage">
+</div>
 
 </div>
 
 
 <!-- APP -->
-<div id="appBox" style="display:none">
+
+<div
+id="appBox"
+style="display:none">
 
 <h2 style="font-size:32px;margin-top:0">
 Welcome to VideoClean AI 👋
@@ -173,55 +709,120 @@ Welcome to VideoClean AI 👋
 
 <hr>
 
-<h2>Video Cleaner</h2>
+<h2>
+Video Cleaner
+</h2>
 
-<!-- FREE PLAN COUNTER -->
-<div id="freeCounter" style="margin-bottom:15px;padding:12px 16px;background:#0d0d0d;border:1px solid #292929;border-radius:14px;color:#aaa;text-align:center">
-Free plan: <strong id="freeCounterText" style="color:#20d9ff">1 free video available</strong>
-</div>
 
-<!-- UPLOAD -->
-<label class="drop" for="videoFile">
+<!-- FREE COUNTER -->
 
-<div class="upload-icon">📤</div>
+<div
+id="freeCounter"
+style="margin-bottom:15px;padding:12px 16px;background:#0d0d0d;border:1px solid #292929;border-radius:14px;color:#aaa;text-align:center">
 
-<strong>
-Drag video or
-<span style="color:#21d8ff">Browse</span>
+Free plan:
+<strong
+id="freeCounterText"
+style="color:#20d9ff">
+
+1 free video available
+
 </strong>
 
-<span>Upload your supported video file</span>
+</div>
 
-<div class="file-name" id="fileName">
+
+<!-- UPLOAD -->
+
+<label
+class="drop"
+for="videoFile">
+
+<div class="upload-icon">
+📤
+</div>
+
+<strong>
+
+Drag video or
+<span style="color:#21d8ff">
+Browse
+</span>
+
+</strong>
+
+<span>
+Upload your supported video file
+</span>
+
+<div
+class="file-name"
+id="fileName">
+
 No file selected
+
 </div>
 
 </label>
 
-<input id="videoFile" type="file" accept="video/*" onchange="showFileName()">
+
+<input
+id="videoFile"
+type="file"
+accept="video/*"
+onchange="showFileName()">
+
 
 <!-- VIDEO PREVIEW -->
-<div class="preview-wrap" id="previewWrap">
 
-<video id="videoPreview" controls playsinline preload="metadata"></video>
+<div
+class="preview-wrap"
+id="previewWrap">
+
+<video
+id="videoPreview"
+controls
+playsinline
+preload="metadata">
+</video>
 
 <div class="video-info">
-<span>🎬 Video Preview</span>
 
-<span class="video-time" id="videoTime">
-00:00 / 00:00
+<span>
+🎬 Video Preview
 </span>
+
+<span
+class="video-time"
+id="videoTime">
+
+00:00 / 00:00
+
+</span>
+
 </div>
 
 </div>
+
 
 <!-- PROCESS BUTTON -->
-<button class="primary" id="processButton" onclick="processVideo()" style="margin-top:15px">
+
+<button
+class="primary"
+id="processButton"
+onclick="processVideo()"
+style="margin-top:15px">
+
 ✨ Process Video
+
 </button>
 
+
 <!-- PROCESSING -->
-<div class="progress-box" id="progressBox">
+
+<div
+class="progress-box"
+id="progressBox">
 
 <div class="progress-top">
 
@@ -229,36 +830,59 @@ No file selected
 ⚡ AI Processing
 </span>
 
-<span class="progress-percent" id="progressPercent">
+<span
+class="progress-percent"
+id="progressPercent">
+
 0%
+
 </span>
 
 </div>
 
 <div class="progress-track">
 
-<div class="progress-bar" id="progressBar"></div>
+<div
+class="progress-bar"
+id="progressBar">
+</div>
 
 </div>
 
 <div class="processing-info">
 
-<span class="processing-text" id="progressText">
+<span
+class="processing-text"
+id="progressText">
+
 Ready to process
+
 </span>
 
-<span class="processing-timer" id="processingTimer">
+<span
+class="processing-timer"
+id="processingTimer">
+
 00:00
+
 </span>
 
 </div>
 
 </div>
 
-<div class="status" id="status"></div>
 
-<!-- CREATOR OFFER AFTER FREE VIDEO -->
-<div class="offer-box" id="creatorOffer">
+<div
+class="status"
+id="status">
+</div>
+
+
+<!-- CREATOR OFFER -->
+
+<div
+class="offer-box"
+id="creatorOffer">
 
 <span class="offer-badge">
 🔥 LIMITED OFFER
@@ -269,176 +893,317 @@ Creator Plan
 </h2>
 
 <div>
-<span class="old-price">₹399</span>
-<span class="offer-price">₹99</span>
+
+<span class="old-price">
+₹399
+</span>
+
+<span class="offer-price">
+₹99
+</span>
+
 </div>
 
 <div style="color:#aaa;margin-bottom:15px">
+
 per month • 50 videos/month
+
 </div>
 
-<ul style="list-style:none;padding:0;color:#aaa;text-align:left">
+<ul
+style="list-style:none;padding:0;color:#aaa;text-align:left">
+
 <li>✓ 50 videos every month</li>
 <li>✓ Enhanced processing</li>
 <li>✓ Audio cleanup</li>
 <li>✓ Priority processing</li>
+
 </ul>
 
-<button class="offer-button" onclick="showCreatorOffer()">
+<button
+class="offer-button"
+onclick="showCreatorOffer()">
+
 🔥 Get Creator ₹99
+
 </button>
 
 </div>
 
+
+<div
+class="payment-status"
+id="paymentStatus">
 </div>
+
 </div>
+
+</div>
+
 </section>
 
 
 <!-- FEATURES -->
-<section class="section container" id="features">
+
+<section
+class="section container"
+id="features">
 
 <h2 class="section-title">
-Powerful <span class="gradient">Video Tools</span>
+
+Powerful
+<span class="gradient">
+Video Tools
+</span>
+
 </h2>
 
 <div class="grid">
 
-<div class="card feature">
-<div class="icon">✨</div>
-<h3>Video Enhancement</h3>
-<p>Improve your uploaded video through the connected processing workflow.</p>
-</div>
 
 <div class="card feature">
-<div class="icon">🎧</div>
-<h3>Audio Cleanup</h3>
-<p>Use the audio-cleaning option supported by your backend.</p>
+
+<div class="icon">
+✨
 </div>
+
+<h3>
+Video Enhancement
+</h3>
+
+<p>
+Improve your uploaded video through the connected processing workflow.
+</p>
+
+</div>
+
 
 <div class="card feature">
-<div class="icon">⚡</div>
-<h3>Fast Processing</h3>
-<p>Simple upload-to-processing workflow with clear status feedback.</p>
+
+<div class="icon">
+🎧
 </div>
 
+<h3>
+Audio Cleanup
+</h3>
+
+<p>
+Use the audio-cleaning option supported by your backend.
+</p>
+
 </div>
+
+
+<div class="card feature">
+
+<div class="icon">
+⚡
+</div>
+
+<h3>
+Fast Processing
+</h3>
+
+<p>
+Simple upload-to-processing workflow with clear status feedback.
+</p>
+
+</div>
+
+
+</div>
+
 </section>
 
 
 <!-- PRICING -->
-<section class="section container" id="pricing">
+
+<section
+class="section container"
+id="pricing">
 
 <h2 class="section-title">
-Choose Your <span class="gradient">Plan</span>
+
+Choose Your
+<span class="gradient">
+Plan
+</span>
+
 </h2>
+
 
 <div class="pricing-grid">
 
+
 <!-- FREE -->
+
 <div class="card plan">
 
-<h3>Free</h3>
+<h3>
+Free
+</h3>
 
-<div class="price">₹0</div>
+<div class="price">
+₹0
+</div>
 
-<small>1 Free Video</small>
+<small>
+1 Free Video
+</small>
 
 <ul>
+
 <li>1 video only</li>
 <li>Basic processing</li>
 <li>Standard resolution</li>
 <li>Basic support</li>
+
 </ul>
 
-<button class="outline" onclick="scrollToUploader()">
+<button
+class="outline"
+onclick="scrollToUploader()">
+
 Use Free Video
+
 </button>
 
 </div>
 
 
 <!-- CREATOR -->
+
 <div class="card plan popular">
 
 <span class="badge">
 🔥 LIMITED OFFER
 </span>
 
-<h3>Creator</h3>
+<h3>
+Creator
+</h3>
 
 <div style="margin-top:10px">
 
-<span style="font-size:22px;color:#777;text-decoration:line-through;margin-right:8px">
+<span
+style="font-size:22px;color:#777;text-decoration:line-through;margin-right:8px">
+
 ₹399
+
 </span>
 
-<span style="font-size:55px;font-weight:900">
+<span
+style="font-size:55px;font-weight:900">
+
 ₹99
+
 </span>
 
 </div>
 
-<small>per month</small>
+<small>
+per month
+</small>
 
 <ul>
+
 <li>50 videos / month</li>
 <li>Enhanced processing</li>
 <li>Audio cleanup</li>
 <li>Priority processing</li>
+
 </ul>
 
-<button class="outline" onclick="showCreatorOffer()">
+<button
+class="outline"
+onclick="showCreatorOffer()">
+
 Get Creator ₹99
+
 </button>
 
 </div>
 
 
 <!-- BUSINESS -->
+
 <div class="card plan">
 
-<h3>Business</h3>
+<h3>
+Business
+</h3>
 
-<div class="price">₹499</div>
+<div class="price">
+₹499
+</div>
 
-<small>per month</small>
+<small>
+per month
+</small>
 
 <ul>
+
 <li>200 videos / month</li>
 <li>Bulk processing</li>
 <li>High-quality export</li>
 <li>Business support</li>
+
 </ul>
 
-<button class="outline" onclick="showBusinessOffer()">
+<button
+class="outline"
+onclick="showBusinessOffer()">
+
 Get Business
+
 </button>
 
 </div>
 
+
 </div>
+
 </section>
 
 
 <!-- FAQ -->
-<section class="section container" id="faq">
+
+<section
+class="section container"
+id="faq">
 
 <h2 class="section-title">
-Frequently Asked <span class="gradient">Questions</span>
+
+Frequently Asked
+<span class="gradient">
+Questions
+</span>
+
 </h2>
+
 
 <div class="faq">
 
+
 <div class="card faq-item">
 
-<button class="faq-q" onclick="faq(this)">
+<button
+class="faq-q"
+onclick="faq(this)">
+
 VideoClean AI kaise kaam karta hai?
-<span class="arrow">▼</span>
+
+<span class="arrow">
+▼
+</span>
+
 </button>
 
 <div class="faq-a">
+
 Video upload karne ke baad file connected processing backend ko bheji jaati hai. Result milne par download link diya jaata hai.
+
 </div>
 
 </div>
@@ -446,13 +1211,22 @@ Video upload karne ke baad file connected processing backend ko bheji jaati hai.
 
 <div class="card faq-item">
 
-<button class="faq-q" onclick="faq(this)">
+<button
+class="faq-q"
+onclick="faq(this)">
+
 Video process hone mein kitna time lagta hai?
-<span class="arrow">▼</span>
+
+<span class="arrow">
+▼
+</span>
+
 </button>
 
 <div class="faq-a">
+
 Short videos ke liye processing time video size aur backend load par depend karta hai.
+
 </div>
 
 </div>
@@ -460,13 +1234,22 @@ Short videos ke liye processing time video size aur backend load par depend kart
 
 <div class="card faq-item">
 
-<button class="faq-q" onclick="faq(this)">
+<button
+class="faq-q"
+onclick="faq(this)">
+
 Kaunse video formats upload kar sakte hain?
-<span class="arrow">▼</span>
+
+<span class="arrow">
+▼
+</span>
+
 </button>
 
 <div class="faq-a">
+
 Common video formats upload kiye ja sakte hain. Actual support backend configuration par depend karega.
+
 </div>
 
 </div>
@@ -474,24 +1257,36 @@ Common video formats upload kiye ja sakte hain. Actual support backend configura
 
 <div class="card faq-item">
 
-<button class="faq-q" onclick="faq(this)">
+<button
+class="faq-q"
+onclick="faq(this)">
+
 Kya account banana zaroori hai?
-<span class="arrow">▼</span>
+
+<span class="arrow">
+▼
+</span>
+
 </button>
 
 <div class="faq-a">
+
 Current version mein processing app login ke baad available hai.
-</div>
 
 </div>
 
 </div>
+
+
+</div>
+
 </section>
 
 </main>
 
 
 <!-- FOOTER -->
+
 <footer id="support">
 
 <div class="container">
@@ -502,12 +1297,24 @@ Policy & Support
 
 <div class="footer-links">
 
-<a href="#">Privacy Policy</a>
-<a href="#">Terms of Service</a>
-<a href="#">Refund Policy</a>
-<a href="#">Contact Support</a>
+<a href="#">
+Privacy Policy
+</a>
+
+<a href="#">
+Terms of Service
+</a>
+
+<a href="#">
+Refund Policy
+</a>
+
+<a href="#">
+Contact Support
+</a>
 
 </div>
+
 
 <div class="disclaimer">
 
@@ -519,11 +1326,13 @@ VideoClean AI is a video processing and optimization tool. Users are responsible
 
 </div>
 
+
 <p>
 © 2026 VideoClean AI — All rights reserved.
 </p>
 
 </div>
+
 </footer>
 
 
@@ -563,11 +1372,51 @@ const FREE_VIDEO_LIMIT=1;
 ========================= */
 
 function toggleMenu(){
-document.getElementById("menu").classList.toggle("open");
+
+document
+.getElementById("menu")
+.classList
+.toggle("open");
+
 }
 
+
 function closeMenu(){
-document.getElementById("menu").classList.remove("open");
+
+document
+.getElementById("menu")
+.classList
+.remove("open");
+
+}
+
+
+/* =========================
+   AUTH MODE
+========================= */
+
+function toggleAuth(){
+
+signupMode=!signupMode;
+
+document.getElementById(
+"authButton"
+).innerText=
+signupMode
+? "Sign Up"
+: "Login";
+
+document.querySelector(
+"#authBox .secondary"
+).innerText=
+signupMode
+? "Back to Login"
+: "Create new account";
+
+document.getElementById(
+"authMessage"
+).innerText="";
+
 }
 
 
@@ -575,62 +1424,109 @@ document.getElementById("menu").classList.remove("open");
    LOGIN
 ========================= */
 
-function toggleAuth(){
-
-signupMode=!signupMode;
-
-document.getElementById("authButton").innerText=
-signupMode ? "Sign Up" : "Login";
-
-document.querySelector("#authBox .secondary").innerText=
-signupMode ? "Back to Login" : "Create new account";
-
-document.getElementById("authMessage").innerText="";
-
-}
-
-
 async function login(){
 
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-const msg=document.getElementById("authMessage");
+const email=
+document.getElementById(
+"email"
+).value.trim();
+
+const password=
+document.getElementById(
+"password"
+).value;
+
+const msg=
+document.getElementById(
+"authMessage"
+);
+
 
 if(!email || !password){
 
-msg.innerText="Please enter email and password.";
+msg.innerText=
+"Please enter email and password.";
+
 return;
 
 }
 
-msg.innerText=signupMode ? "Creating account..." : "Logging in...";
 
-let result=signupMode
+if(!supabaseClient){
 
-? await supabaseClient.auth.signUp({
-email:email,
-password:password
-})
+msg.innerText=
+"Login system is not available.";
 
-: await supabaseClient.auth.signInWithPassword({
+return;
+
+}
+
+
+msg.innerText=
+signupMode
+? "Creating account..."
+: "Logging in...";
+
+
+try{
+
+let result;
+
+if(signupMode){
+
+result=
+await supabaseClient.auth.signUp({
 email:email,
 password:password
 });
 
+}else{
+
+result=
+await supabaseClient.auth.signInWithPassword({
+email:email,
+password:password
+});
+
+}
+
+
 if(result.error){
 
-msg.innerText=result.error.message;
+msg.innerText=
+"❌ "+result.error.message;
+
 return;
 
 }
 
+
 if(signupMode){
 
-msg.innerText="Account created. Please confirm your email, then login.";
+msg.innerText=
+"✅ Account created. Please confirm your email, then login.";
 
 }else{
 
+if(result.data && result.data.user){
+
 showApp(result.data.user);
+
+}else{
+
+msg.innerText=
+"Login was not completed.";
+
+}
+
+}
+
+}catch(error){
+
+console.error(error);
+
+msg.innerText=
+"❌ Login error: "+error.message;
 
 }
 
@@ -638,13 +1534,15 @@ showApp(result.data.user);
 
 
 /* =========================
-   FREE VIDEO STORAGE
+   FREE VIDEO
 ========================= */
 
 function getFreeVideoCount(){
 
 return parseInt(
-localStorage.getItem("videoclean_free_videos") || "0"
+localStorage.getItem(
+"videoclean_free_videos"
+)||"0"
 );
 
 }
@@ -669,9 +1567,10 @@ return getFreeVideoCount()>=FREE_VIDEO_LIMIT;
 
 function useFreeVideo(){
 
-const newCount=getFreeVideoCount()+1;
+const count=
+getFreeVideoCount()+1;
 
-setFreeVideoCount(newCount);
+setFreeVideoCount(count);
 
 updateFreeCounter();
 
@@ -680,25 +1579,44 @@ updateFreeCounter();
 
 function updateFreeCounter(){
 
-const count=getFreeVideoCount();
+const count=
+getFreeVideoCount();
 
-const text=document.getElementById("freeCounterText");
+const text=
+document.getElementById(
+"freeCounterText"
+);
 
 if(!text)return;
 
+
 if(count>=FREE_VIDEO_LIMIT){
 
-text.innerText="Free video used — Upgrade to Creator";
+text.innerText=
+"Free video used — Upgrade to Creator";
 
-text.style.color="#ff6b7d";
+text.style.color=
+"#ff6b7d";
 
-document.getElementById("creatorOffer").style.display="block";
+const offer=
+document.getElementById(
+"creatorOffer"
+);
+
+if(offer){
+
+offer.style.display=
+"block";
+
+}
 
 }else{
 
-text.innerText="1 free video available";
+text.innerText=
+"1 free video available";
 
-text.style.color="#20d9ff";
+text.style.color=
+"#20d9ff";
 
 }
 
@@ -711,8 +1629,15 @@ text.style.color="#20d9ff";
 
 function showApp(user){
 
-document.getElementById("authBox").style.display="none";
-document.getElementById("appBox").style.display="block";
+document.getElementById(
+"authBox"
+).style.display=
+"none";
+
+document.getElementById(
+"appBox"
+).style.display=
+"block";
 
 updateFreeCounter();
 
@@ -720,157 +1645,93 @@ updateFreeCounter();
 
 
 /* =========================
-   CHECK LOGIN
+   CHECK USER
 ========================= */
 
 async function checkUser(){
 
-const {data}=await supabaseClient.auth.getUser();
+try{
 
-if(data.user){
+const {data,error}=
+await supabaseClient.auth.getUser();
+
+if(error){
+
+console.log(
+"Auth check:",
+error.message
+);
+
+return;
+
+}
+
+if(data && data.user){
 
 showApp(data.user);
 
 }
 
-}
+}catch(error){
 
-
-/* =========================
-   CREATOR OFFER
-========================= */
-
-function showCreatorOffer(){
-
-alert(
-"🔥 LIMITED OFFER\n\n"+
-"Creator Plan\n"+
-"₹399/month → ₹99/month\n\n"+
-"✓ 50 videos every month\n"+
-"✓ Enhanced processing\n"+
-"✓ Audio cleanup\n"+
-"✓ Priority processing\n\n"+
-"Payment gateway will be connected next."
+console.log(
+"Session check failed:",
+error
 );
 
 }
 
+}
+
 
 /* =========================
-   BUSINESS OFFER
+   CREATOR PAYMENT
 ========================= */
 
-function showBusinessOffer(){
+async function showCreatorOffer(){
 
-alert(
-"Business Plan\n\n"+
-"₹499/month\n\n"+
-"✓ 200 videos/month\n"+
-"✓ Bulk processing\n"+
-"✓ High-quality export\n"+
-"✓ Business support\n\n"+
-"Payment gateway will be connected next."
+const paymentStatus=
+document.getElementById(
+"paymentStatus"
 );
 
-}
+if(paymentStatus){
 
+paymentStatus.style.display=
+"block";
 
-/* =========================
-   SCROLL UPLOADER
-========================= */
-
-function scrollToUploader(){
-
-document.getElementById("home").scrollIntoView({
-behavior:"smooth"
-});
+paymentStatus.innerText=
+"⏳ Opening secure payment...";
 
 }
 
 
-/* =========================
-   FORMAT TIME
-========================= */
+try{
 
-function formatTime(seconds){
+/* CREATE ORDER */
 
-if(!isFinite(seconds))
-return "00:00";
-
-seconds=Math.floor(seconds);
-
-const minutes=Math.floor(seconds/60)
-.toString()
-.padStart(2,"0");
-
-const secs=(seconds%60)
-.toString()
-.padStart(2,"0");
-
-return minutes+":"+secs;
-
+const orderResponse=
+await fetch(
+"/api/create-order",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+amount:9900,
+currency:"INR",
+receipt:
+"creator_"+Date.now()
+})
 }
+);
 
 
-/* =========================
-   VIDEO PREVIEW
-========================= */
+if(!orderResponse.ok){
 
-function showFileName(){
+const errorText=
+await orderResponse.text();
 
-const file=document.getElementById("videoFile").files[0];
-
-document.getElementById("fileName").innerText=
-file ? file.name : "No file selected";
-
-if(!file){
-
-document.getElementById("previewWrap").style.display="none";
-return;
-
-}
-
-if(hasUsedFreeVideo()){
-
-document.getElementById("creatorOffer").style.display="block";
-
-document.getElementById("status").innerHTML=
-"🔒 Your free video has already been used.";
-
-return;
-
-}
-
-if(previewURL){
-
-URL.revokeObjectURL(previewURL);
-
-}
-
-previewURL=URL.createObjectURL(file);
-
-const video=document.getElementById("videoPreview");
-
-video.src=previewURL;
-
-document.getElementById("previewWrap").style.display="block";
-
-video.onloadedmetadata=function(){
-
-document.getElementById("videoTime").innerText=
-"00:00 / "+formatTime(video.duration);
-
-};
-
-video.ontimeupdate=function(){
-
-document.getElementById("videoTime").innerText=
-formatTime(video.currentTime)+" / "+formatTime(video.duration);
-
-};
-
-}
-
-
-/* =========================
-   START PROGRE
+throw ne
