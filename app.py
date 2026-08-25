@@ -10,51 +10,70 @@ import hashlib
 import razorpay
 
 
-# ==========================================
-# APP
-# ==========================================
+# ==================================================
+# VIDEO CLEAN AI
+# BACKEND
+# ==================================================
 
-APP = FastAPI(title="VideoClean AI API")
+APP = FastAPI(
+    title="VideoClean AI API"
+)
 
+
+# ==================================================
+# CORS
+# ==================================================
 
 APP.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
 )
 
 
-# ==========================================
-# DIRECTORIES
-# ==========================================
+# ==================================================
+# PATHS
+# ==================================================
 
 ROOT = Path(__file__).resolve().parent
 
 FRONTEND = ROOT / "index.html"
 
-IN = ROOT / "uploads"
-OUT = ROOT / "outputs"
+UPLOAD_DIR = ROOT / "uploads"
+OUTPUT_DIR = ROOT / "outputs"
 
-IN.mkdir(exist_ok=True)
-OUT.mkdir(exist_ok=True)
+UPLOAD_DIR.mkdir(
+    exist_ok=True
+)
 
-
-# ==========================================
-# RAZORPAY
-# ==========================================
-
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+OUTPUT_DIR.mkdir(
+    exist_ok=True
+)
 
 
-if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
-    print("WARNING: Razorpay environment variables are missing.")
+# ==================================================
+# RAZORPAY SETTINGS
+# ==================================================
+
+RAZORPAY_KEY_ID = os.getenv(
+    "RAZORPAY_KEY_ID"
+)
+
+RAZORPAY_KEY_SECRET = os.getenv(
+    "RAZORPAY_KEY_SECRET"
+)
 
 
 razorpay_client = None
 
-if RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET:
+
+if (
+    RAZORPAY_KEY_ID
+    and
+    RAZORPAY_KEY_SECRET
+):
 
     razorpay_client = razorpay.Client(
         auth=(
@@ -63,10 +82,16 @@ if RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET:
         )
     )
 
+else:
 
-# ==========================================
+    print(
+        "WARNING: Razorpay keys are not configured."
+    )
+
+
+# ==================================================
 # HOME
-# ==========================================
+# ==================================================
 
 @APP.get("/")
 def home():
@@ -74,7 +99,7 @@ def home():
     if FRONTEND.exists():
 
         return FileResponse(
-            FRONTEND,
+            str(FRONTEND),
             media_type="text/html"
         )
 
@@ -84,9 +109,22 @@ def home():
     }
 
 
-# ==========================================
+# ==================================================
+# HEALTH CHECK
+# ==================================================
+
+@APP.get("/health")
+def health():
+
+    return {
+        "status": "ok",
+        "service": "VideoClean AI"
+    }
+
+
+# ==================================================
 # RAZORPAY CONFIG
-# ==========================================
+# ==================================================
 
 @APP.get("/api/razorpay-config")
 def razorpay_config():
@@ -103,14 +141,14 @@ def razorpay_config():
     }
 
 
-# ==========================================
+# ==================================================
 # CREATE RAZORPAY ORDER
-# ==========================================
+# ==================================================
 
 @APP.post("/api/create-order")
 async def create_order(data: dict):
 
-    if not razorpay_client:
+    if razorpay_client is None:
 
         raise HTTPException(
             status_code=500,
@@ -133,6 +171,7 @@ async def create_order(data: dict):
             detail="Invalid amount"
         )
 
+
     if amount < 100:
 
         raise HTTPException(
@@ -140,15 +179,18 @@ async def create_order(data: dict):
             detail="Minimum payment amount is 100 paise"
         )
 
+
     currency = data.get(
         "currency",
         "INR"
     )
 
+
     receipt = data.get(
         "receipt",
-        f"receipt_{uuid.uuid4().hex[:12]}"
+        "receipt_" + uuid.uuid4().hex[:12]
     )
+
 
     try:
 
@@ -162,6 +204,7 @@ async def create_order(data: dict):
 
         })
 
+
         return {
 
             "order_id": order["id"],
@@ -172,9 +215,11 @@ async def create_order(data: dict):
 
         }
 
+
     except Exception as e:
 
         error_text = str(e).lower()
+
 
         if (
             "authentication" in error_text
@@ -187,15 +232,22 @@ async def create_order(data: dict):
                 detail="Razorpay authentication failed"
             )
 
+
+        print(
+            "Razorpay error:",
+            str(e)
+        )
+
+
         raise HTTPException(
             status_code=500,
             detail="Unable to create Razorpay order"
         )
 
 
-# ==========================================
-# VERIFY PAYMENT
-# ==========================================
+# ==================================================
+# VERIFY RAZORPAY PAYMENT
+# ==================================================
 
 @APP.post("/api/verify-payment")
 async def verify_payment(data: dict):
@@ -206,6 +258,7 @@ async def verify_payment(data: dict):
             status_code=500,
             detail="Razorpay secret is not configured"
         )
+
 
     payment_id = data.get(
         "razorpay_payment_id"
@@ -219,12 +272,20 @@ async def verify_payment(data: dict):
         "razorpay_signature"
     )
 
-    if not payment_id or not order_id or not signature:
+
+    if (
+        not payment_id
+        or
+        not order_id
+        or
+        not signature
+    ):
 
         raise HTTPException(
             status_code=400,
             detail="Missing payment verification fields"
         )
+
 
     generated_signature = hmac.new(
 
@@ -232,13 +293,16 @@ async def verify_payment(data: dict):
             "utf-8"
         ),
 
-        f"{order_id}|{payment_id}".encode(
+        (
+            f"{order_id}|{payment_id}"
+        ).encode(
             "utf-8"
         ),
 
         hashlib.sha256
 
     ).hexdigest()
+
 
     if not hmac.compare_digest(
         generated_signature,
@@ -249,6 +313,7 @@ async def verify_payment(data: dict):
             status_code=400,
             detail="Payment signature verification failed"
         )
+
 
     return {
 
@@ -266,9 +331,9 @@ async def verify_payment(data: dict):
     }
 
 
-# ==========================================
-# PROCESS VIDEO - FAST VERSION
-# ==========================================
+# ==================================================
+# PROCESS VIDEO
+# ==================================================
 
 @APP.post("/process-video")
 async def process_video(
@@ -289,37 +354,83 @@ async def process_video(
 
 ):
 
-    # --------------------------------------
-    # CREATE JOB
-    # --------------------------------------
+    print(
+        "PROCESS VIDEO REQUEST RECEIVED"
+    )
+
+
+    # ------------------------------------------------
+    # CREATE JOB ID
+    # ------------------------------------------------
 
     job = uuid.uuid4().hex
 
 
-    # --------------------------------------
-    # FILE PATHS
-    # --------------------------------------
+    # ------------------------------------------------
+    # SAFE FILE NAME
+    # ------------------------------------------------
 
-    filename = Path(
+    original_name = Path(
         video.filename or "video.mp4"
     ).name
 
-    src = IN / f"{job}_{filename}"
 
-    dst = OUT / f"{job}.mp4"
+    # ------------------------------------------------
+    # FILE PATHS
+    # ------------------------------------------------
+
+    input_file = (
+        UPLOAD_DIR
+        /
+        f"{job}_{original_name}"
+    )
 
 
-    # --------------------------------------
-    # SAVE VIDEO
-    # --------------------------------------
+    output_file = (
+        OUTPUT_DIR
+        /
+        f"{job}.mp4"
+    )
+
+
+    # ------------------------------------------------
+    # SAVE UPLOADED VIDEO
+    # ------------------------------------------------
 
     try:
 
-        src.write_bytes(
-            await video.read()
+        video_data = await video.read()
+
+        if not video_data:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Uploaded video is empty"
+            )
+
+
+        input_file.write_bytes(
+            video_data
         )
 
-    except Exception:
+
+        print(
+            "Video uploaded:",
+            input_file.name
+        )
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        print(
+            "Upload error:",
+            str(e)
+        )
 
         raise HTTPException(
             status_code=500,
@@ -327,27 +438,29 @@ async def process_video(
         )
 
 
-    # --------------------------------------
-    # FAST VIDEO FILTER
-    # --------------------------------------
+    # ------------------------------------------------
+    # VIDEO FILTERS
+    # ------------------------------------------------
 
-    vf = []
+    video_filters = []
 
 
+    # FAST ENHANCEMENT
     if enhance:
 
-        vf.append(
+        video_filters.append(
             "eq=contrast=1.03:saturation=1.03"
         )
 
 
-    # --------------------------------------
     # OPTIONAL LOGO REMOVAL
-    # --------------------------------------
+    if (
+        w > 0
+        and
+        h > 0
+    ):
 
-    if w > 0 and h > 0:
-
-        vf.append(
+        video_filters.append(
 
             f"delogo="
             f"x={x}:"
@@ -359,53 +472,58 @@ async def process_video(
         )
 
 
-    # --------------------------------------
-    # FFMPEG
-    # --------------------------------------
+    # ------------------------------------------------
+    # FFMPEG COMMAND
+    # ------------------------------------------------
 
-    cmd = [
+    command = [
 
         "ffmpeg",
 
         "-y",
 
         "-i",
-        str(src)
+        str(input_file)
 
     ]
 
 
-    if vf:
+    # Add video filters
 
-        cmd += [
+    if video_filters:
+
+        command += [
 
             "-vf",
 
-            ",".join(vf)
+            ",".join(
+                video_filters
+            )
 
         ]
 
 
-    # --------------------------------------
-    # AUDIO
-    # --------------------------------------
+    # ------------------------------------------------
+    # AUDIO CLEANUP
+    # ------------------------------------------------
 
     if audio_clean:
 
-        cmd += [
+        command += [
 
             "-af",
 
-            "highpass=f=80,lowpass=f=16000"
+            "highpass=f=80,"
+            "lowpass=f=16000"
 
         ]
 
 
-    # --------------------------------------
-    # FAST OUTPUT
-    # --------------------------------------
+    # ------------------------------------------------
+    # FAST ENCODING
+    # ------------------------------------------------
 
-    cmd += [
+    command += [
 
         "-c:v",
         "libx264",
@@ -425,20 +543,25 @@ async def process_video(
         "-movflags",
         "+faststart",
 
-        str(dst)
+        str(output_file)
 
     ]
 
 
-    # --------------------------------------
-    # PROCESS
-    # --------------------------------------
+    print(
+        "Starting FFmpeg..."
+    )
+
+
+    # ------------------------------------------------
+    # RUN FFMPEG
+    # ------------------------------------------------
 
     try:
 
-        subprocess.run(
+        result = subprocess.run(
 
-            cmd,
+            command,
 
             check=True,
 
@@ -448,15 +571,42 @@ async def process_video(
 
         )
 
+
+        print(
+            "FFmpeg completed."
+        )
+
+
+    except FileNotFoundError:
+
+        print(
+            "FFmpeg is not installed."
+        )
+
+
+        return {
+
+            "error":
+                "FFmpeg is not installed on server."
+
+        }
+
+
     except subprocess.CalledProcessError as e:
 
-        details = (
+        error_text = (
             e.stderr
             .decode(
                 errors="ignore"
             )
-            [-2000:]
         )
+
+
+        print(
+            "FFmpeg ERROR:",
+            error_text[-2000:]
+        )
+
 
         return {
 
@@ -464,34 +614,34 @@ async def process_video(
                 "FFmpeg processing failed",
 
             "details":
-                details
+                error_text[-2000:]
 
         }
 
 
-    # --------------------------------------
+    # ------------------------------------------------
     # CHECK OUTPUT
-    # --------------------------------------
+    # ------------------------------------------------
 
-    if not dst.exists():
+    if not output_file.exists():
 
         raise HTTPException(
 
             status_code=500,
 
             detail=
-                "Processed video file was not created"
+                "Processed video was not created"
 
         )
 
 
-    # --------------------------------------
-    # DELETE ORIGINAL
-    # --------------------------------------
+    # ------------------------------------------------
+    # DELETE ORIGINAL UPLOAD
+    # ------------------------------------------------
 
     try:
 
-        src.unlink(
+        input_file.unlink(
             missing_ok=True
         )
 
@@ -500,9 +650,15 @@ async def process_video(
         pass
 
 
-    # --------------------------------------
+    # ------------------------------------------------
     # SUCCESS
-    # --------------------------------------
+    # ------------------------------------------------
+
+    print(
+        "VIDEO PROCESSING SUCCESS:",
+        job
+    )
+
 
     return {
 
@@ -516,12 +672,22 @@ async def process_video(
     }
 
 
-# ==========================================
-# DOWNLOAD
-# ==========================================
+# ==================================================
+# DOWNLOAD PROCESSED VIDEO
+# ==================================================
 
 @APP.get("/download/{job}")
 def download(job: str):
+
+    print(
+        "DOWNLOAD REQUEST:",
+        job
+    )
+
+
+    # ------------------------------------------------
+    # CHECK JOB ID
+    # ------------------------------------------------
 
     if not job.isalnum():
 
@@ -534,10 +700,28 @@ def download(job: str):
         )
 
 
-    p = OUT / f"{job}.mp4"
+    # ------------------------------------------------
+    # OUTPUT FILE
+    # ------------------------------------------------
+
+    output_file = (
+        OUTPUT_DIR
+        /
+        f"{job}.mp4"
+    )
 
 
-    if not p.exists():
+    # ------------------------------------------------
+    # CHECK FILE
+    # ------------------------------------------------
+
+    if not output_file.exists():
+
+        print(
+            "DOWNLOAD FILE NOT FOUND:",
+            output_file
+        )
+
 
         raise HTTPException(
 
@@ -548,9 +732,21 @@ def download(job: str):
         )
 
 
+    # ------------------------------------------------
+    # SEND FILE
+    # ------------------------------------------------
+
+    print(
+        "SENDING VIDEO:",
+        output_file.name
+    )
+
+
     return FileResponse(
 
-        path=str(p),
+        path=str(
+            output_file
+        ),
 
         media_type="video/mp4",
 
@@ -560,17 +756,25 @@ def download(job: str):
     )
 
 
-# ==========================================
-# HEALTH CHECK
-# ==========================================
+# ==================================================
+# RUN
+# ==================================================
 
-@APP.get("/health")
-def health():
+if __name__ == "__main__":
 
-    return {
+    import uvicorn
 
-        "status": "ok",
+    uvicorn.run(
 
-        "service": "VideoClean AI"
+        APP,
 
-    }
+        host="0.0.0.0",
+
+        port=int(
+            os.getenv(
+                "PORT",
+                "10000"
+            )
+        )
+
+    )
