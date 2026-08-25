@@ -218,6 +218,7 @@ input[type=file]{
 display:none
 }
 
+
 /* VIDEO PREVIEW */
 
 .preview-wrap{
@@ -253,7 +254,8 @@ color:#20d9ff;
 font-weight:800
 }
 
-/* PROGRESS */
+
+/* PROCESSING */
 
 .progress-box{
 display:none;
@@ -283,7 +285,7 @@ font-weight:900
 
 .progress-track{
 width:100%;
-height:12px;
+height:14px;
 background:#252525;
 border-radius:20px;
 overflow:hidden
@@ -297,10 +299,22 @@ border-radius:20px;
 transition:width .5s ease
 }
 
-.progress-text{
+.processing-info{
+display:flex;
+justify-content:space-between;
+align-items:center;
 margin-top:12px;
-color:#aaa;
-text-align:center
+gap:10px
+}
+
+.processing-text{
+color:#aaa
+}
+
+.processing-timer{
+color:#20d9ff;
+font-size:20px;
+font-weight:900
 }
 
 .status{
@@ -309,6 +323,9 @@ margin-top:18px;
 color:#bbb;
 min-height:28px
 }
+
+
+/* SECTIONS */
 
 .section{
 padding:55px 0
@@ -414,6 +431,9 @@ font-weight:700;
 cursor:pointer
 }
 
+
+/* FAQ */
+
 .faq{
 max-width:900px;
 margin:auto
@@ -459,6 +479,9 @@ color:#3f99ff;
 transition:.2s
 }
 
+
+/* FOOTER */
+
 footer{
 border-top:1px solid #1d1d1d;
 padding:45px 0 30px;
@@ -484,6 +507,7 @@ background:#111;
 border-radius:0 14px 14px 0;
 color:#999
 }
+
 
 @media(max-width:800px){
 
@@ -519,18 +543,30 @@ top:70px
 .preview-wrap video{
 max-height:360px
 }
+
+.processing-info{
+flex-direction:column;
+text-align:center
+}
+
 }
 </style>
 </head>
 
 <body>
 
+
 <header>
+
 <div class="container nav">
 
-<a class="logo" href="#home">VideoClean AI</a>
+<a class="logo" href="#home">
+VideoClean AI
+</a>
 
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<button class="menu-btn" onclick="toggleMenu()">
+☰
+</button>
 
 </div>
 
@@ -543,10 +579,12 @@ max-height:360px
 <a href="#support" onclick="closeMenu()">Support</a>
 
 </nav>
+
 </header>
 
 
 <main id="home">
+
 
 <section class="hero container">
 
@@ -590,13 +628,17 @@ placeholder="Password">
 class="primary"
 id="authButton"
 onclick="login()">
+
 Login
+
 </button>
 
 <button
 class="secondary"
 onclick="toggleAuth()">
+
 Create new account
+
 </button>
 
 <div
@@ -613,8 +655,11 @@ id="authMessage">
 id="appBox"
 style="display:none">
 
+
 <h2 style="font-size:32px;margin-top:0">
+
 Welcome to VideoClean AI 👋
+
 </h2>
 
 
@@ -626,6 +671,8 @@ Video Cleaner
 </h2>
 
 
+<!-- UPLOAD -->
+
 <label
 class="drop"
 for="videoFile">
@@ -635,10 +682,12 @@ for="videoFile">
 </div>
 
 <strong>
+
 Drag video or
 <span style="color:#21d8ff">
 Browse
 </span>
+
 </strong>
 
 <span>
@@ -648,7 +697,9 @@ Upload your supported video file
 <div
 class="file-name"
 id="fileName">
+
 No file selected
+
 </div>
 
 </label>
@@ -677,19 +728,23 @@ preload="metadata">
 <div class="video-info">
 
 <span>
-Video preview
+🎬 Video Preview
 </span>
 
 <span
 class="video-time"
 id="videoTime">
+
 00:00 / 00:00
+
 </span>
 
 </div>
 
 </div>
 
+
+<!-- PROCESS BUTTON -->
 
 <button
 class="primary"
@@ -702,11 +757,12 @@ style="margin-top:15px">
 </button>
 
 
-<!-- PROCESSING PROGRESS -->
+<!-- PROCESSING -->
 
 <div
 class="progress-box"
 id="progressBox">
+
 
 <div class="progress-top">
 
@@ -717,10 +773,13 @@ id="progressBox">
 <span
 class="progress-percent"
 id="progressPercent">
+
 0%
+
 </span>
 
 </div>
+
 
 <div class="progress-track">
 
@@ -731,11 +790,27 @@ id="progressBar">
 
 </div>
 
-<div
-class="progress-text"
+
+<div class="processing-info">
+
+<span
+class="processing-text"
 id="progressText">
+
 Ready to process
+
+</span>
+
+<span
+class="processing-timer"
+id="processingTimer">
+
+00:00
+
+</span>
+
 </div>
+
 
 </div>
 
@@ -745,6 +820,7 @@ class="status"
 id="status">
 </div>
 
+
 </div>
 
 </div>
@@ -752,19 +828,30 @@ id="status">
 </section>
 
 
+<!-- FEATURES -->
+
 <section
 class="section container"
 id="features">
 
 <h2 class="section-title">
-Powerful <span class="gradient">Video Tools</span>
+
+Powerful
+<span class="gradient">
+Video Tools
+</span>
+
 </h2>
+
 
 <div class="grid">
 
+
 <div class="card feature">
 
-<div class="icon">✨</div>
+<div class="icon">
+✨
+</div>
 
 <h3>
 Video Enhancement
@@ -779,7 +866,9 @@ Improve your uploaded video through the connected processing workflow.
 
 <div class="card feature">
 
-<div class="icon">🎧</div>
+<div class="icon">
+🎧
+</div>
 
 <h3>
 Audio Cleanup
@@ -794,7 +883,9 @@ Use the audio-cleaning option supported by your backend.
 
 <div class="card feature">
 
-<div class="icon">⚡</div>
+<div class="icon">
+⚡
+</div>
 
 <h3>
 Fast Processing
@@ -806,138 +897,21 @@ Simple upload-to-processing workflow with clear status feedback.
 
 </div>
 
+
 </div>
 
 </section>
 
+
+<!-- PRICING -->
 
 <section
 class="section container"
 id="pricing">
 
 <h2 class="section-title">
-Choose Your <span class="gradient">Plan</span>
-</h2>
 
-<div class="pricing-grid">
-
-
-<div class="card plan">
-
-<h3>Free</h3>
-
-<div class="price">
-₹0
-</div>
-
-<small>
-Trial access
-</small>
-
-<ul>
-
-<li>Basic processing</li>
-<li>Limited video usage</li>
-<li>Standard resolution</li>
-<li>Basic support</li>
-
-</ul>
-
-<button
-class="outline"
-onclick="document.getElementById('home').scrollIntoView()">
-
-Get Free Access
-
-</button>
-
-</div>
-
-
-<div class="card plan popular">
-
-<span class="badge">
-MOST POPULAR
-</span>
-
-<h3>
-Creator
-</h3>
-
-<div class="price">
-₹99
-</div>
-
-<small>
-per month
-</small>
-
-<ul>
-
-<li>More video processing</li>
-<li>Enhanced processing</li>
-<li>Audio cleanup</li>
-<li>Priority workflow</li>
-
-</ul>
-
-<button
-class="outline"
-onclick="alert('Payment gateway can be connected here.')">
-
-Choose Creator
-
-</button>
-
-</div>
-
-
-<div class="card plan">
-
-<h3>
-Business
-</h3>
-
-<div class="price">
-₹499
-</div>
-
-<small>
-per month
-
-        if(result.download){
-
-            status.innerHTML=
-                '✅ Processing complete. '+
-                '<a style="color:#20d9ff;font-weight:800" target="_blank" href="https://videoclean-ai.onrender.com'+
-                result.download+
-                '">Download video</a>';
-
-        }else{
-
-            status.innerText=
-                "✅ Processing completed.";
-
-        }
-
-    }catch(error){
-
-        if(timerInterval){
-
-            clearInterval(timerInterval);
-
-            timerInterval=null;
-        }
-
-        status.innerText=
-            "❌ Processing failed: "+error.message;
-
-    }finally{
-
-        button.disabled=false;
-
-    }
-}
-<script>
-alert("VideoClean AI JavaScript OK");
-</script>
+Choose Your
+<span class="gradient">
+Plan
+</span
