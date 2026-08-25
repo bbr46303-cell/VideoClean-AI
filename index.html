@@ -1730,7 +1730,952 @@ const secs =
 .padStart(2,"0");
 
 return minutes + ":" + secs;
+/* =========================
+   VIDEO PREVIEW
+========================= */
 
+function showFileName(){
+
+const input =
+document.getElementById("videoFile");
+
+const file =
+input.files[0];
+
+const fileName =
+document.getElementById("fileName");
+
+const previewWrap =
+document.getElementById("previewWrap");
+
+const video =
+document.getElementById("videoPreview");
+
+const status =
+document.getElementById("status");
+
+if(!file){
+
+fileName.innerText =
+"No file selected";
+
+previewWrap.style.display =
+"none";
+
+return;
+
+}
+
+fileName.innerText =
+file.name;
+
+if(hasUsedFreeVideo()){
+
+previewWrap.style.display =
+"none";
+
+status.innerText =
+"🔒 Your free video has already been used. Please upgrade to Creator.";
+
+document.getElementById(
+"creatorOffer"
+).style.display =
+"block";
+
+return;
+
+}
+
+if(previewURL){
+
+URL.revokeObjectURL(
+previewURL
+);
+
+}
+
+previewURL =
+URL.createObjectURL(file);
+
+video.src =
+previewURL;
+
+previewWrap.style.display =
+"block";
+
+video.onloadedmetadata =
+function(){
+
+document.getElementById(
+"videoTime"
+).innerText =
+"00:00 / " +
+formatTime(video.duration);
+
+};
+
+video.ontimeupdate =
+function(){
+
+document.getElementById(
+"videoTime"
+).innerText =
+formatTime(video.currentTime) +
+" / " +
+formatTime(video.duration);
+
+};
+
+}
+
+
+/* =========================
+   PROCESS VIDEO
+========================= */
+
+async function processVideo(){
+
+const file =
+document
+.getElementById("videoFile")
+.files[0];
+
+const status =
+document.getElementById("status");
+
+const button =
+document.getElementById("processButton");
+
+const progressBox =
+document.getElementById("progressBox");
+
+const progressBar =
+document.getElementById("progressBar");
+
+const progressPercent =
+document.getElementById("progressPercent");
+
+const progressText =
+document.getElementById("progressText");
+
+const timer =
+document.getElementById("processingTimer");
+
+const downloadBox =
+document.getElementById("downloadBox");
+
+const downloadButton =
+document.getElementById("downloadButton");
+
+
+if(!file){
+
+status.innerText =
+"⚠️ Please select a video first.";
+
+return;
+
+}
+
+if(hasUsedFreeVideo()){
+
+status.innerText =
+"🔒 Free video already used. Please upgrade to Creator.";
+
+document.getElementById(
+"creatorOffer"
+).style.display =
+"block";
+
+return;
+
+}
+
+
+button.disabled =
+true;
+
+button.innerText =
+"⏳ Processing...";
+
+progressBox.style.display =
+"block";
+
+downloadBox.style.display =
+"none";
+
+progressBar.style.width =
+"5%";
+
+progressPercent.innerText =
+"5%";
+
+progressText.innerText =
+"Uploading video...";
+
+status.innerText =
+"Please wait while AI processes your video.";
+
+elapsed = 0;
+
+timer.innerText =
+"00:00";
+
+
+if(progressTimer){
+
+clearInterval(
+progressTimer
+);
+
+}
+
+progressTimer =
+setInterval(
+function(){
+
+elapsed++;
+
+timer.innerText =
+formatTime(elapsed);
+
+},
+1000
+);
+
+
+try{
+
+const formData =
+new FormData();
+
+formData.append(
+"video",
+file
+);
+
+formData.append(
+"enhance",
+"true"
+);
+
+formData.append(
+"audio_clean",
+"true"
+);
+
+
+/*
+   IMPORTANT:
+   Render backend URL
+*/
+
+const API_URL =
+window.location.origin;
+
+
+progressBar.style.width =
+"15%";
+
+progressPercent.innerText =
+"15%";
+
+progressText.innerText =
+"Sending video to AI backend...";
+
+
+const response =
+await fetch(
+API_URL + "/process",
+{
+method:"POST",
+body:formData
+}
+);
+
+
+progressBar.style.width =
+"50%";
+
+progressPercent.innerText =
+"50%";
+
+progressText.innerText =
+"AI processing in progress...";
+
+
+if(!response.ok){
+
+let errorText =
+"Server error";
+
+try{
+
+const errorData =
+await response.json();
+
+errorText =
+errorData.detail ||
+errorData.error ||
+errorText;
+
+}catch(e){}
+
+throw new Error(
+errorText
+);
+
+}
+
+
+const result =
+await response.json();
+
+
+if(result.error){
+
+throw new Error(
+result.error
+);
+
+}
+
+
+if(!result.download){
+
+throw new Error(
+"Processing completed but download link was not returned."
+);
+
+}
+
+
+progressBar.style.width =
+"100%";
+
+progressPercent.innerText =
+"100%";
+
+progressText.innerText =
+"Processing complete!";
+
+status.innerText =
+"🎉 Your video has been cleaned successfully.";
+
+
+const downloadURL =
+API_URL +
+result.download;
+
+downloadButton.href =
+downloadURL;
+
+downloadBox.style.display =
+"block";
+
+
+useFreeVideo();
+
+
+}catch(error){
+
+console.error(
+"PROCESS ERROR:",
+error
+);
+
+status.innerText =
+"❌ " +
+(error.message ||
+"Video processing failed.");
+
+progressText.innerText =
+"Processing failed.";
+
+progressBar.style.width =
+"0%";
+
+progressPercent.innerText =
+"0%";
+
+}finally{
+
+if(progressTimer){
+
+clearInterval(
+progressTimer
+);
+
+progressTimer =
+null;
+
+}
+
+button.disabled =
+false;
+
+button.innerText =
+"✨ Process Video";
+
+}
+
+}
+
+
+/* =========================
+   CREATOR PAYMENT
+========================= */
+
+async function showCreatorOffer(){
+
+const status =
+document.getElementById(
+"status"
+);
+
+status.innerText =
+"Preparing secure payment...";
+
+
+try{
+
+const response =
+await fetch(
+"/api/create-order",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+
+amount:9900,
+
+currency:"INR",
+
+receipt:
+"creator_" +
+Date.now()
+
+})
+}
+);
+
+
+if(!response.ok){
+
+const errorData =
+await response.json()
+.catch(
+()=>({})
+);
+
+throw new Error(
+errorData.detail ||
+"Unable to create payment order."
+);
+
+}
+
+
+const order =
+await response.json();
+
+
+const configResponse =
+await fetch(
+"/api/razorpay-config"
+);
+
+
+if(!configResponse.ok){
+
+throw new Error(
+"Razorpay configuration is missing."
+);
+
+}
+
+
+const config =
+await configResponse.json();
+
+
+const options = {
+
+key:
+config.key_id,
+
+amount:
+order.amount,
+
+currency:
+order.currency,
+
+name:
+"VideoClean AI",
+
+description:
+"Creator Plan - ₹99/month",
+
+order_id:
+order.order_id,
+
+handler:
+async function(payment){
+
+try{
+
+const verifyResponse =
+await fetch(
+"/api/verify-payment",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+
+razorpay_payment_id:
+payment.razorpay_payment_id,
+
+razorpay_order_id:
+payment.razorpay_order_id,
+
+razorpay_signature:
+payment.razorpay_signature
+
+})
+}
+);
+
+
+const verifyData =
+await verifyResponse.json();
+
+
+if(!verifyResponse.ok){
+
+throw new Error(
+verifyData.detail ||
+"Payment verification failed."
+);
+
+}
+
+
+alert(
+"🎉 Payment successful!\n\n"+
+"Creator Plan activated successfully."
+);
+
+status.innerText =
+"✅ Payment verified successfully.";
+
+}catch(error){
+
+console.error(error);
+
+alert(
+"Payment received, but verification failed. Please contact support."
+);
+
+status.innerText =
+"⚠️ Payment verification failed.";
+
+}
+
+},
+
+prefill:{
+
+email:
+document
+.getElementById("email")
+.value
+.trim()
+
+},
+
+theme:{
+
+color:"#08d7f3"
+
+}
+
+};
+
+
+if(!window.Razorpay){
+
+throw new Error(
+"Razorpay checkout failed to load."
+);
+
+}
+
+
+const razorpay =
+new Razorpay(options);
+
+razorpay.on(
+"payment.failed",
+function(response){
+
+console.error(
+"PAYMENT FAILED:",
+response
+);
+
+status.innerText =
+"❌ Payment failed. Please try again.";
+
+}
+);
+
+razorpay.open();
+
+
+}catch(error){
+
+console.error(
+"PAYMENT ERROR:",
+error
+);
+
+status.innerText =
+"❌ " +
+(error.message ||
+"Payment could not be started.");
+
+}
+
+}
+
+
+/* =========================
+   BUSINESS PAYMENT
+========================= */
+
+async function showBusinessOffer(){
+
+const status =
+document.getElementById(
+"status"
+);
+
+status.innerText =
+"Preparing Business payment...";
+
+
+try{
+
+const response =
+await fetch(
+"/api/create-order",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+
+amount:49900,
+
+currency:"INR",
+
+receipt:
+"business_" +
+Date.now()
+
+})
+}
+);
+
+
+if(!response.ok){
+
+const errorData =
+await response.json()
+.catch(
+()=>({})
+);
+
+throw new Error(
+errorData.detail ||
+"Unable to create payment order."
+);
+
+}
+
+
+const order =
+await response.json();
+
+
+const configResponse =
+await fetch(
+"/api/razorpay-config"
+);
+
+
+if(!configResponse.ok){
+
+throw new Error(
+"Razorpay configuration is missing."
+);
+
+}
+
+
+const config =
+await configResponse.json();
+
+
+const options = {
+
+key:
+config.key_id,
+
+amount:
+order.amount,
+
+currency:
+order.currency,
+
+name:
+"VideoClean AI",
+
+description:
+"Business Plan - ₹499/month",
+
+order_id:
+order.order_id,
+
+handler:
+async function(payment){
+
+const verifyResponse =
+await fetch(
+"/api/verify-payment",
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json"
+},
+body:JSON.stringify({
+
+razorpay_payment_id:
+payment.razorpay_payment_id,
+
+razorpay_order_id:
+payment.razorpay_order_id,
+
+razorpay_signature:
+payment.razorpay_signature
+
+})
+}
+);
+
+
+const verifyData =
+await verifyResponse.json();
+
+
+if(!verifyResponse.ok){
+
+throw new Error(
+verifyData.detail ||
+"Payment verification failed."
+);
+
+}
+
+
+alert(
+"🎉 Business payment successful!"
+);
+
+status.innerText =
+"✅ Payment verified successfully.";
+
+}
+
+};
+
+
+if(!window.Razorpay){
+
+throw new Error(
+"Razorpay checkout failed to load."
+);
+
+}
+
+
+const razorpay =
+new Razorpay(options);
+
+razorpay.open();
+
+
+}catch(error){
+
+console.error(error);
+
+status.innerText =
+"❌ " +
+(error.message ||
+"Payment could not be started.");
+
+}
+
+}
+
+
+/* =========================
+   SCROLL UPLOADER
+========================= */
+
+function scrollToUploader(){
+
+document
+.getElementById("home")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+/* =========================
+   FAQ
+========================= */
+
+function faq(button){
+
+const item =
+button.closest(
+".faq-item"
+);
+
+if(!item)return;
+
+item.classList.toggle(
+"open"
+);
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+try{
+
+await supabaseClient.auth.signOut();
+
+document.getElementById(
+"appBox"
+).style.display =
+"none";
+
+document.getElementById(
+"authBox"
+).style.display =
+"block";
+
+document.getElementById(
+"authMessage"
+).innerText =
+"Logged out successfully.";
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+supabaseClient.auth.onAuthStateChange(
+function(event,session){
+
+if(session && session.user){
+
+showApp(
+session.user
+);
+
+}
+
+}
+);
+
+
+/* =========================
+   PAGE LOAD
+========================= */
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+checkUser();
+
+}
+);
+
+
+/* =========================
+   GLOBAL ERROR DISPLAY
+========================= */
+
+window.addEventListener(
+"error",
+function(event){
+
+console.error(
+"JavaScript Error:",
+event.error ||
+event.message
+);
+
+const msg =
+document.getElementById(
+"authMessage"
+);
+
+if(msg &&
+!document.getElementById(
+"appBox"
+).style.display){
+
+msg.innerText =
+"⚠️ App error. Please refresh the page.";
+
+}
+
+}
+);
+
+</script>
+
+</body>
+</html>
 }
 
 
