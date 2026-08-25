@@ -4,350 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VideoClean AI — Video Optimization</title>
-<meta name="description" content="VideoClean AI - clean, enhance and optimize your own videos with a fast online workflow.">
+<meta name="description" content="VideoClean AI - optimize and process your own videos.">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
-:root{
-  --bg:#070707;--card:#121212;--card2:#171b20;--text:#fff;--muted:#a4a4a8;
-  --cyan:#12d7f5;--blue:#3c8cff;--purple:#7546ff;--red:#ff5365;--green:#34d399;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,Helvetica,sans-serif;line-height:1.65;
-}
-a{color:inherit;text-decoration:none}
-.header{
- position:sticky;top:0;z-index:20;background:rgba(7,7,7,.94);
- border-bottom:1px solid #202020;backdrop-filter:blur(12px);
-}
-.nav{
- max-width:1100px;margin:auto;padding:18px 28px;display:flex;
- align-items:center;justify-content:space-between;
-}
-.logo{
- font-size:32px;font-weight:900;letter-spacing:-1.5px;
- background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple));
- -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.menu{display:flex;gap:26px;color:#ddd;font-weight:700}
-.menu a:hover{color:var(--cyan)}
-.hamb{display:none;font-size:34px;cursor:pointer}
-.hero{max-width:1100px;margin:auto;padding:78px 28px 45px;text-align:center}
-.badge{
- display:inline-block;border:1px solid #2a2a2a;border-radius:999px;
- padding:7px 15px;color:var(--cyan);font-weight:800;background:#10151a;
-}
-h1{
- font-size:clamp(42px,7vw,82px);line-height:1.02;margin:22px 0;
- font-weight:950;letter-spacing:-3px;
-}
-.gradient{
- background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple));
- -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.hero p{max-width:760px;margin:0 auto;color:#aaa;font-size:20px}
-.section{max-width:1100px;margin:auto;padding:55px 28px}
-.section-title{text-align:center;font-size:42px;line-height:1.15;margin:0 0 12px;font-weight:950}
-.section-sub{text-align:center;color:#999;font-size:18px;margin:0 auto 35px;max-width:700px}
-
-.upload-card{
- background:var(--card);border:1px solid #242424;border-radius:28px;
- padding:26px;box-shadow:0 18px 60px rgba(0,0,0,.35);
-}
-.drop{
- border:2px dashed #30343a;border-radius:22px;min-height:260px;
- display:flex;align-items:center;justify-content:center;text-align:center;
- padding:25px;cursor:pointer;transition:.2s;
-}
-.drop:hover{border-color:var(--cyan);background:#101416}
-.upload-icon{font-size:54px}
-.drop-title{font-size:23px;font-weight:800}
-.browse{color:var(--cyan)}
-.file-name{color:#aaa;margin-top:10px;word-break:break-word}
-.preview{width:100%;max-height:420px;margin-top:20px;border-radius:18px;background:#000;display:none}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px}
-.control{
- background:#101010;border:1px solid #292929;border-radius:15px;padding:14px;
-}
-.control label{display:flex;align-items:center;gap:10px;color:#ddd;font-weight:700}
-.btn{
- width:100%;border:0;border-radius:999px;padding:17px 22px;margin-top:18px;
- color:#fff;font-size:18px;font-weight:900;cursor:pointer;
- background:linear-gradient(90deg,#08cce9,#328df6,#7740f4);
- box-shadow:0 8px 28px rgba(51,116,255,.22);
-}
-.btn:disabled{opacity:.55;cursor:not-allowed}
-.status{text-align:center;margin-top:16px;min-height:28px;color:#aaa;font-weight:700}
-.status.ok{color:var(--green)} .status.err{color:var(--red)}
-.download{
- display:none;margin-top:15px;text-align:center;border:1px solid #20d7f5;
- border-radius:999px;padding:14px;color:var(--cyan);font-weight:900;
-}
-
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.step,.price{
- background:var(--card);border:1px solid #242424;border-radius:26px;padding:34px;
- text-align:center;
-}
-.icon{font-size:64px;filter:drop-shadow(0 0 20px rgba(18,215,245,.25))}
-.step h3{font-size:25px;margin:15px 0}.step p{color:#999;margin:0}
-.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.price{text-align:left}.price.popular{border-color:var(--cyan);box-shadow:0 0 35px rgba(18,215,245,.12)}
-.price h3{font-size:28px;margin:0 0 8px}.amount{font-size:58px;font-weight:950}
-.price .desc{color:#999}.price ul{padding-left:22px;color:#aaa}.price li{margin:9px 0}
-.price .btn{margin-top:10px}
-.pop{color:var(--cyan);font-weight:900;font-size:13px;letter-spacing:1px}
-
-.faq{max-width:850px;margin:auto}
-details{background:var(--card2);border:1px solid #292d33;border-left:5px solid #338eff;border-radius:18px;margin:14px 0;padding:0 22px}
-summary{cursor:pointer;padding:22px 4px;font-size:20px;font-weight:800}
-details p{color:#aaa;padding:0 4px 20px;margin:0}
-
-.disclaimer{
- max-width:900px;margin:30px auto 0;background:#111;border-left:5px solid var(--red);
- padding:24px;border-radius:10px;color:#999;text-align:center;
-}
-.footer{border-top:1px solid #222;margin-top:60px;padding:55px 28px;text-align:center;color:#777}
-.footer .logo{display:inline-block;margin-bottom:10px}
-
-@media(max-width:760px){
- .nav{padding:16px 20px}.logo{font-size:30px}.menu{display:none}.hamb{display:block}
- .menu.open{display:flex;position:absolute;top:72px;left:0;right:0;background:#090909;
-  padding:20px;flex-direction:column;border-bottom:1px solid #222}
- .hero{padding:58px 20px 30px}h1{letter-spacing:-2px}.hero p{font-size:17px}
- .section{padding:45px 20px}.section-title{font-size:35px}
- .steps,.pricing{grid-template-columns:1fr}.controls{grid-template-columns:1fr}
- .upload-card{padding:15px}.drop{min-height:220px}
-}
+:root{--bg:#070707;--card:#121212;--card2:#171b20;--text:#fff;--muted:#a4a4a8;--cyan:#12d7f5;--blue:#3c8cff;--purple:#7546ff;--red:#ff5365;--green:#34d399}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.65}a{color:inherit;text-decoration:none}
+.header{position:sticky;top:0;z-index:20;background:rgba(7,7,7,.94);border-bottom:1px solid #202020;backdrop-filter:blur(12px)}
+.nav{max-width:1100px;margin:auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:32px;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}.menu{display:flex;gap:26px;color:#ddd;font-weight:700}.menu a:hover{color:var(--cyan)}.hamb{display:none;font-size:34px;cursor:pointer}
+.hero{max-width:1100px;margin:auto;padding:78px 28px 45px;text-align:center}.badge{display:inline-block;border:1px solid #2a2a2a;border-radius:999px;padding:7px 15px;color:var(--cyan);font-weight:800;background:#10151a}
+h1{font-size:clamp(42px,7vw,82px);line-height:1.02;margin:22px 0;font-weight:950;letter-spacing:-3px}.gradient{background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{max-width:760px;margin:0 auto;color:#aaa;font-size:20px}
+.section{max-width:1100px;margin:auto;padding:55px 28px}.section-title{text-align:center;font-size:42px;line-height:1.15;margin:0 0 12px;font-weight:950}.section-sub{text-align:center;color:#999;font-size:18px;margin:0 auto 35px;max-width:700px}
+.upload-card{background:var(--card);border:1px solid #242424;border-radius:28px;padding:26px;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.drop{border:2px dashed #30343a;border-radius:22px;min-height:260px;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;cursor:pointer;transition:.2s}.drop:hover{border-color:var(--cyan);background:#101416}.upload-icon{font-size:54px}.drop-title{font-size:23px;font-weight:800}.browse{color:var(--cyan)}.file-name{color:#aaa;margin-top:10px;word-break:break-word}.preview{width:100%;max-height:420px;margin-top:20px;border-radius:18px;background:#000;display:none}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px}.control{background:#101010;border:1px solid #292929;border-radius:15px;padding:14px}.control label{display:flex;align-items:center;gap:10px;color:#ddd;font-weight:700}
+.btn{width:100%;border:0;border-radius:999px;padding:17px 22px;margin-top:18px;color:#fff;font-size:18px;font-weight:900;cursor:pointer;background:linear-gradient(90deg,#08cce9,#328df6,#7740f4);box-shadow:0 8px 28px rgba(51,116,255,.22)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.status{text-align:center;margin-top:16px;min-height:28px;color:#aaa;font-weight:700}.status.ok{color:var(--green)}.status.err{color:var(--red)}
+.plan-box{display:none;margin-top:22px;background:#10151a;border:2px solid var(--cyan);border-radius:24px;padding:25px;box-shadow:0 0 30px rgba(18,215,245,.12)}.plan-box.selected{display:block}.plan-head{display:flex;justify-content:space-between;align-items:center;gap:15px}.plan-name{font-size:27px;font-weight:900}.price-big{font-size:50px;font-weight:950}.month{color:#aaa}.plan-box ul{padding-left:22px;color:#bbb}.plan-box li{margin:8px 0}.limit{color:#34d399;font-weight:900}.subscribe{margin-top:8px}.small-note{color:#888;font-size:13px;text-align:center;margin-top:10px}
+.download{display:none;margin-top:15px;text-align:center;border:1px solid #20d7f5;border-radius:999px;padding:14px;color:var(--cyan);font-weight:900}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.step,.price{background:var(--card);border:1px solid #242424;border-radius:26px;padding:34px;text-align:center}.icon{font-size:64px;filter:drop-shadow(0 0 20px rgba(18,215,245,.25))}.step h3{font-size:25px;margin:15px 0}.step p{color:#999;margin:0}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.price{text-align:left}.price.popular{border-color:var(--cyan);box-shadow:0 0 35px rgba(18,215,245,.12)}.price h3{font-size:28px;margin:0 0 8px}.amount{font-size:58px;font-weight:950}.price .desc{color:#999}.price ul{padding-left:22px;color:#aaa}.price li{margin:9px 0}.price .btn{margin-top:10px}.pop{color:var(--cyan);font-weight:900;font-size:13px;letter-spacing:1px}
+.faq{max-width:850px;margin:auto}details{background:var(--card2);border:1px solid #292d33;border-left:5px solid #338eff;border-radius:18px;margin:14px 0;padding:0 22px}summary{cursor:pointer;padding:22px 4px;font-size:20px;font-weight:800}details p{color:#aaa;padding:0 4px 20px;margin:0}
+.disclaimer{max-width:900px;margin:30px auto 0;background:#111;border-left:5px solid var(--red);padding:24px;border-radius:10px;color:#999;text-align:center}.footer{border-top:1px solid #222;margin-top:60px;padding:55px 28px;text-align:center;color:#777}.footer .logo{display:inline-block;margin-bottom:10px}
+@media(max-width:760px){.nav{padding:16px 20px}.logo{font-size:30px}.menu{display:none}.hamb{display:block}.menu.open{display:flex;position:absolute;top:72px;left:0;right:0;background:#090909;padding:20px;flex-direction:column;border-bottom:1px solid #222}.hero{padding:58px 20px 30px}h1{letter-spacing:-2px}.hero p{font-size:17px}.section{padding:45px 20px}.section-title{font-size:35px}.steps,.pricing{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.upload-card{padding:15px}.drop{min-height:220px}.plan-head{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
-
-<header class="header">
-  <nav class="nav">
-    <a class="logo" href="#top">VideoClean AI</a>
-    <div class="hamb" id="hamb">☰</div>
-    <div class="menu" id="menu">
-      <a href="#upload">Video Tool</a>
-      <a href="#how">How It Works</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
-    </div>
-  </nav>
-</header>
+<header class="header"><nav class="nav"><a class="logo" href="#top">VideoClean AI</a><div class="hamb" id="hamb">☰</div><div class="menu" id="menu"><a href="#upload">Video Tool</a><a href="#how">How It Works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div></nav></header>
 
 <main id="top">
-<section class="hero">
-  <span class="badge">⚡ Fast Video Optimization</span>
-  <h1>Clean &amp; Optimize<br><span class="gradient">Your Videos</span></h1>
-  <p>Upload your own video and use VideoClean AI to improve picture quality, clean audio and export a fresh optimized copy.</p>
-</section>
+<section class="hero"><span class="badge">⚡ Fast Video Optimization</span><h1>Clean &amp; Optimize<br><span class="gradient">Your Videos</span></h1><p>Upload your own video and use VideoClean AI to improve picture quality, clean audio and export a fresh optimized copy.</p></section>
 
 <section class="section" id="upload">
-  <h2 class="section-title">Video Optimization</h2>
-  <p class="section-sub">Select a video, choose the options you need, complete the one-time payment and process it.</p>
+<h2 class="section-title">Video Optimization</h2>
+<p class="section-sub">Choose a video, then select the ₹99 monthly Creator plan to process your videos.</p>
+<div class="upload-card">
+<div class="drop" id="drop"><div><div class="upload-icon">📤</div><div class="drop-title">Drag video or <span class="browse">Browse</span></div><div class="file-name" id="fileName">No file selected</div><input id="file" type="file" accept="video/*" hidden></div></div>
+<video id="preview" class="preview" controls playsinline></video>
+<div class="controls"><div class="control"><label><input id="enhance" type="checkbox" checked> Enhance video quality</label></div><div class="control"><label><input id="audioClean" type="checkbox" checked> Clean audio</label></div></div>
 
-  <div class="upload-card">
-    <div class="drop" id="drop">
-      <div>
-        <div class="upload-icon">📤</div>
-        <div class="drop-title">Drag video or <span class="browse">Browse</span></div>
-        <div class="file-name" id="fileName">No file selected</div>
-        <input id="file" type="file" accept="video/*" hidden>
-      </div>
-    </div>
+<button class="btn" id="choosePlanBtn">🛡️ Optimize &amp; Process Video</button>
 
-    <video id="preview" class="preview" controls playsinline></video>
+<div class="plan-box" id="planBox">
+<div class="plan-head"><div><div class="pop">CREATOR MONTHLY</div><div class="plan-name">₹99 / Month</div><div class="month">Auto-renewing monthly subscription</div></div><div class="price-big">₹99</div></div>
+<ul><li><span class="limit">✓ 50 videos / month</span></li><li><span class="limit">✓ Maximum 10 minutes per video</span></li><li>✓ Video quality enhancement</li><li>✓ Audio cleanup</li><li>✓ Fresh MP4 export</li></ul>
+<button class="btn subscribe" id="subscribeBtn">💳 Subscribe ₹99 / Month</button>
+<div class="small-note">Monthly subscription is handled securely by Razorpay.</div>
+</div>
 
-    <div class="controls">
-      <div class="control">
-        <label><input id="enhance" type="checkbox" checked> Enhance video quality</label>
-      </div>
-      <div class="control">
-        <label><input id="audioClean" type="checkbox" checked> Clean audio</label>
-      </div>
-    </div>
-
-    <button class="btn" id="payBtn">💳 Pay ₹99 &amp; Process Video</button>
-    <div class="status" id="status"></div>
-    <a class="download" id="download" target="_blank">⬇ Download Optimized Video</a>
-  </div>
+<div class="status" id="status"></div>
+<a class="download" id="download" target="_blank">⬇ Download Optimized Video</a>
+</div>
 </section>
 
-<section class="section" id="how">
-  <h2 class="section-title">How Our AI Optimizes Videos</h2>
-  <p class="section-sub">A simple three-step workflow for your own content.</p>
-  <div class="steps">
-    <article class="step"><div class="icon">🧬</div><h3>1. Input Cleanup</h3><p>Prepare the uploaded video for a fresh processing pass without relying on hidden metadata from the original file.</p></article>
-    <article class="step"><div class="icon">🎛️</div><h3>2. Quality Tuning</h3><p>Apply optional visual enhancement and audio cleanup using the processing settings you select.</p></article>
-    <article class="step"><div class="icon">🛡️</div><h3>3. Clean Export</h3><p>Render a new MP4 file with a web-friendly encoding and fast-start playback.</p></article>
-  </div>
-</section>
+<section class="section" id="how"><h2 class="section-title">How Our AI Optimizes Videos</h2><p class="section-sub">A simple three-step workflow for your own content.</p><div class="steps">
+<article class="step"><div class="icon">🧬</div><h3>1. Input Cleanup</h3><p>Prepare your uploaded video for a fresh processing pass.</p></article>
+<article class="step"><div class="icon">🎛️</div><h3>2. Quality Tuning</h3><p>Apply optional visual enhancement and audio cleanup.</p></article>
+<article class="step"><div class="icon">🛡️</div><h3>3. Clean Export</h3><p>Render a new MP4 file with web-friendly encoding.</p></article>
+</div></section>
 
-<section class="section" id="pricing">
-  <h2 class="section-title">Simple Pricing</h2>
-  <p class="section-sub">Start with one video processing payment.</p>
-  <div class="pricing">
-    <article class="price popular">
-      <div class="pop">MOST POPULAR</div>
-      <h3>Single Video</h3>
-      <div class="amount">₹99</div>
-      <div class="desc">One video processing</div>
-      <ul><li>Video enhancement</li><li>Audio cleanup</li><li>Fresh MP4 export</li><li>Download processed file</li></ul>
-      <button class="btn" onclick="document.getElementById('upload').scrollIntoView()">Process Video</button>
-    </article>
-    <article class="price">
-      <h3>Creator</h3>
-      <div class="amount">₹499</div>
-      <div class="desc">Planned monthly option</div>
-      <ul><li>For frequent creators</li><li>Multiple processing credits</li><li>Priority workflow</li></ul>
-      <button class="btn" onclick="alert('Creator plan can be enabled after the basic payment flow is working.')">Coming Soon</button>
-    </article>
-    <article class="price">
-      <h3>Business</h3>
-      <div class="amount">₹999</div>
-      <div class="desc">For higher-volume use</div>
-      <ul><li>Higher processing limits</li><li>Priority processing</li><li>Business support</li></ul>
-      <button class="btn" onclick="alert('Business plan can be enabled later.')">Coming Soon</button>
-    </article>
-  </div>
-</section>
+<section class="section" id="pricing"><h2 class="section-title">Creator Plan</h2><p class="section-sub">One simple monthly plan for regular creators.</p><div class="pricing">
+<article class="price popular"><div class="pop">MOST POPULAR</div><h3>Creator Monthly</h3><div class="amount">₹99</div><div class="desc">per month</div><ul><li>50 videos / month</li><li>Maximum 10 minutes/video</li><li>Video enhancement</li><li>Audio cleanup</li><li>Fresh MP4 export</li></ul><button class="btn" onclick="document.getElementById('upload').scrollIntoView();document.getElementById('planBox').classList.add('selected')">Select ₹99 Plan</button></article>
+<article class="price"><h3>Free</h3><div class="amount">₹0</div><div class="desc">No processing credits</div><ul><li>Browse the tool</li><li>Preview your video</li><li>Upgrade when ready</li></ul><button class="btn" onclick="document.getElementById('upload').scrollIntoView()">Try Tool</button></article>
+<article class="price"><h3>Business</h3><div class="amount">Custom</div><div class="desc">Higher-volume use</div><ul><li>Custom limits</li><li>Priority processing</li><li>Business support</li></ul><button class="btn" onclick="alert('Business plan can be added later.')">Contact</button></article>
+</div></section>
 
-<section class="section" id="faq">
-  <h2 class="section-title">Frequently Asked Questions</h2>
-  <div class="faq">
-    <details><summary>Is VideoClean AI a copyright bypass tool?</summary><p>No. It is intended for processing and optimizing videos that you own or have permission to edit. Re-encoding a file does not remove copyright ownership or platform rights.</p></details>
-    <details><summary>Why does processing take time?</summary><p>Video encoding is CPU-intensive. Short videos should generally finish faster, while resolution, filters and server resources can increase processing time.</p></details>
-    <details><summary>Is my Razorpay secret key exposed?</summary><p>No. The secret key must remain on the backend as an environment variable. Only the public Key ID is returned to the frontend.</p></details>
-    <details><summary>Where is my processed video downloaded from?</summary><p>The backend creates a unique job file and returns a download endpoint for that processed MP4.</p></details>
-  </div>
-
-  <div class="disclaimer">
-    <b>Disclaimer:</b> VideoClean AI is a video optimization and processing service. Users are responsible for ensuring that they have the necessary rights and permissions for any content they upload or process.
-  </div>
-</section>
+<section class="section" id="faq"><h2 class="section-title">Frequently Asked Questions</h2><div class="faq">
+<details><summary>₹99 plan में कितने videos मिलेंगे?</summary><p>₹99 Creator Monthly plan में 50 videos प्रति billing cycle मिलेंगे.</p></details>
+<details><summary>एक video की maximum length कितनी है?</summary><p>हर video की maximum length 10 minutes है.</p></details>
+<details><summary>क्या payment monthly होगा?</summary><p>हाँ. यह Razorpay Subscription के जरिए monthly recurring plan है.</p></details>
+<details><summary>क्या यह copyrighted content को bypass करता है?</summary><p>नहीं. यह केवल आपके अपने या properly authorised videos की optimization और processing के लिए है. Re-encoding copyright ownership या platform rights को नहीं बदलता.</p></details>
+</div><div class="disclaimer"><b>Disclaimer:</b> VideoClean AI video optimization service है. केवल वही content upload करें जिसे process करने के आपके पास आवश्यक rights/permission हों.</div></section>
 </main>
-
-<footer class="footer">
-  <div class="logo">VideoClean AI</div>
-  <p>Professional video optimization for your own content.</p>
-  <p>© 2026 VideoClean AI — All rights reserved.</p>
-</footer>
+<footer class="footer"><div class="logo">VideoClean AI</div><p>Professional video optimization for your own content.</p><p>© 2026 VideoClean AI — All rights reserved.</p></footer>
 
 <script>
-const $ = id => document.getElementById(id);
-const fileInput = $('file'), drop = $('drop'), preview = $('preview');
-let selectedFile = null;
+const $=id=>document.getElementById(id);
+const fileInput=$('file'),drop=$('drop'),preview=$('preview');
+let selectedFile=null, subscriptionId=localStorage.getItem('vc_subscription_id')||'';
 
-$('hamb').onclick = () => $('menu').classList.toggle('open');
-
-drop.onclick = () => fileInput.click();
-drop.ondragover = e => { e.preventDefault(); drop.style.borderColor = '#12d7f5'; };
-drop.ondragleave = () => drop.style.borderColor = '#30343a';
-drop.ondrop = e => {
-  e.preventDefault(); drop.style.borderColor = '#30343a';
-  setFile(e.dataTransfer.files[0]);
-};
-fileInput.onchange = () => setFile(fileInput.files[0]);
+$('hamb').onclick=()=>$('menu').classList.toggle('open');
+drop.onclick=()=>fileInput.click();
+drop.ondragover=e=>{e.preventDefault();drop.style.borderColor='#12d7f5'};
+drop.ondragleave=()=>drop.style.borderColor='#30343a';
+drop.ondrop=e=>{e.preventDefault();drop.style.borderColor='#30343a';setFile(e.dataTransfer.files[0])};
+fileInput.onchange=()=>setFile(fileInput.files[0]);
 
 function setFile(file){
-  if(!file) return;
-  if(!file.type.startsWith('video/')){
-    setStatus('❌ Please select a video file.', true); return;
-  }
-  selectedFile = file;
-  $('fileName').textContent = file.name;
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = 'block';
-  setStatus('');
+ if(!file)return;
+ if(!file.type.startsWith('video/')){setStatus('❌ कृपया video file चुनें।',true);return}
+ selectedFile=file;$('fileName').textContent=file.name;
+ preview.src=URL.createObjectURL(file);preview.style.display='block';setStatus('');
 }
+function setStatus(text,error=false){const s=$('status');s.textContent=text;s.className='status'+(error?' err':'')}
 
-function setStatus(text, error=false){
-  const s=$('status'); s.textContent=text; s.className='status'+(error?' err':'');
-}
+$('choosePlanBtn').onclick=()=>{
+ if(!selectedFile){setStatus('❌ पहले video select करें।',true);return}
+ $('planBox').classList.add('selected');
+ $('planBox').scrollIntoView({behavior:'smooth',block:'center'});
+ setStatus('₹99 Creator Monthly plan select किया गया है।');
+};
 
-$('payBtn').onclick = async () => {
-  if(!selectedFile){ setStatus('❌ पहले video select करें।', true); return; }
+$('subscribeBtn').onclick=async()=>{
+ if(!selectedFile){setStatus('❌ पहले video select करें।',true);return}
+ $('subscribeBtn').disabled=true;setStatus('Subscription setup हो रहा है…');
+ try{
+  const cfgRes=await fetch('/api/razorpay-config');
+  const cfg=await cfgRes.json();
+  if(!cfgRes.ok)throw new Error(cfg.detail||'Razorpay configuration failed');
 
-  $('payBtn').disabled=true;
-  setStatus('Payment setup हो रहा है…');
+  const subRes=await fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})});
+  const sub=await subRes.json();
+  if(!subRes.ok)throw new Error(sub.detail||'Unable to create subscription');
 
-  try{
-    const cfgRes = await fetch('/api/razorpay-config');
-    const cfg = await cfgRes.json();
-    if(!cfgRes.ok) throw new Error(cfg.detail || 'Razorpay configuration failed');
-
-    const orderRes = await fetch('/api/create-order',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({amount:9900,currency:'INR'})
-    });
-    const order = await orderRes.json();
-    if(!orderRes.ok) throw new Error(order.detail || 'Unable to create order');
-
-    const options = {
-      key: cfg.key_id,
-      amount: order.amount,
-      currency: order.currency,
-      name: 'VideoClean AI',
-      description: 'One video processing',
-      order_id: order.order_id,
-      theme:{color:'#3c8cff'},
-      handler: async function(response){
-        try{
-          setStatus('Payment verify हो रहा है…');
-          const verifyRes = await fetch('/api/verify-payment',{
-            method:'POST',headers:{'Content-Type':'application/json'},
-            body:JSON.stringify(response)
-          });
-          const verify = await verifyRes.json();
-          if(!verifyRes.ok) throw new Error(verify.detail || 'Payment verification failed');
-          await processVideo();
-        }catch(err){
-          setStatus('❌ '+err.message,true);
-          $('payBtn').disabled=false;
-        }
-      },
-      modal:{ondismiss:function(){
-        setStatus('Payment cancelled.');
-        $('payBtn').disabled=false;
-      }}
-    };
-
-    const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function(resp){
-      setStatus('❌ Payment failed: '+(resp.error?.description || 'Unknown error'),true);
-      $('payBtn').disabled=false;
-    });
-    rzp.open();
-
-  }catch(err){
-    setStatus('❌ '+err.message,true);
-    $('payBtn').disabled=false;
-  }
+  const options={
+   key:cfg.key_id,subscription_id:sub.subscription_id,
+   name:'VideoClean AI',description:'Creator Monthly — ₹99/month',
+   theme:{color:'#3c8cff'},
+   handler:async function(response){
+    try{
+     setStatus('Subscription verify हो रहा है…');
+     const vr=await fetch('/api/verify-subscription',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(response)});
+     const v=await vr.json();if(!vr.ok)throw new Error(v.detail||'Verification failed');
+     subscriptionId=response.razorpay_subscription_id;
+     localStorage.setItem('vc_subscription_id',subscriptionId);
+     await processVideo();
+    }catch(err){setStatus('❌ '+err.message,true);$('subscribeBtn').disabled=false}
+   },
+   modal:{ondismiss:()=>{setStatus('Payment cancelled.');$('subscribeBtn').disabled=false}}
+  };
+  const rzp=new Razorpay(options);
+  rzp.on('payment.failed',resp=>{setStatus('❌ Payment failed: '+(resp.error?.description||'Unknown error'),true);$('subscribeBtn').disabled=false});
+  rzp.open();
+ }catch(err){setStatus('❌ '+err.message,true);$('subscribeBtn').disabled=false}
 };
 
 async function processVideo(){
-  setStatus('🎬 Video processing शुरू हो रही है…');
-
-  const fd = new FormData();
-  fd.append('video', selectedFile);
-  fd.append('enhance', $('enhance').checked ? 'true':'false');
-  fd.append('audio_clean', $('audioClean').checked ? 'true':'false');
-  fd.append('x','0'); fd.append('y','0'); fd.append('w','0'); fd.append('h','0');
-
-  const res = await fetch('/process-video',{method:'POST',body:fd});
-  const data = await res.json();
-
-  if(!res.ok || data.error) throw new Error(data.detail || data.error || 'Video processing failed');
-
-  const link = $('download');
-  link.href = data.download;
-  link.style.display='block';
-  link.textContent='⬇ Download Optimized Video';
-  setStatus('✅ Video तैयार है!',false);
-  $('payBtn').disabled=false;
+ setStatus('🎬 Video processing शुरू हो रही है…');
+ const fd=new FormData();
+ fd.append('video',selectedFile);fd.append('subscription_id',subscriptionId);
+ fd.append('enhance',$('enhance').checked?'true':'false');
+ fd.append('audio_clean',$('audioClean').checked?'true':'false');
+ try{
+  const res=await fetch('/process-video',{method:'POST',body:fd});
+  const data=await res.json();
+  if(!res.ok)throw new Error(data.detail||data.error||'Video processing failed');
+  const link=$('download');link.href=data.download;link.style.display='block';link.textContent='⬇ Download Optimized Video';
+  setStatus('✅ Video तैयार है!',false);$('subscribeBtn').disabled=false;
+ }catch(err){setStatus('❌ '+err.message,true);$('subscribeBtn').disabled=false}
 }
 </script>
 </body>
