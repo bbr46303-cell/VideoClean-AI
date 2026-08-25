@@ -11,7 +11,13 @@
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#050505;color:#fff;font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+body{
+margin:0;
+background:#050505;
+color:#fff;
+font-family:Arial,Helvetica,sans-serif;
+line-height:1.55
+}
 a{text-decoration:none;color:inherit}
 .container{width:min(1120px,92%);margin:auto}
 
@@ -208,7 +214,6 @@ input[type=file]{
 display:none
 }
 
-
 /* VIDEO PREVIEW */
 
 .preview-wrap{
@@ -243,7 +248,6 @@ font-size:15px
 color:#20d9ff;
 font-weight:800
 }
-
 
 /* PROCESSING */
 
@@ -314,6 +318,25 @@ color:#bbb;
 min-height:28px
 }
 
+.download-box{
+display:none;
+margin-top:20px;
+padding:20px;
+background:#0d1719;
+border:1px solid #20d9ff;
+border-radius:18px;
+text-align:center
+}
+
+.download-button{
+display:block;
+margin-top:15px;
+padding:15px;
+border-radius:30px;
+background:linear-gradient(90deg,#08d7f3,#447cff,#873eff);
+font-weight:900;
+cursor:pointer
+}
 
 /* OFFER */
 
@@ -359,21 +382,6 @@ font-weight:900;
 cursor:pointer
 }
 
-
-/* PAYMENT */
-
-.payment-status{
-display:none;
-margin-top:15px;
-padding:14px;
-border-radius:14px;
-background:#0b1518;
-border:1px solid #1f6470;
-text-align:center;
-color:#aaa
-}
-
-
 /* SECTIONS */
 
 .section{
@@ -387,20 +395,17 @@ margin:0 0 40px;
 font-weight:900
 }
 
-.grid,
-.pricing-grid{
+.grid,.pricing-grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:22px
 }
 
-.feature,
-.plan{
+.feature,.plan{
 padding:30px
 }
 
-.feature h3,
-.plan h3{
+.feature h3,.plan h3{
 font-size:24px;
 margin:12px 0
 }
@@ -480,7 +485,6 @@ font-weight:700;
 cursor:pointer
 }
 
-
 /* FAQ */
 
 .faq{
@@ -528,7 +532,6 @@ color:#3f99ff;
 transition:.2s
 }
 
-
 /* FOOTER */
 
 footer{
@@ -557,11 +560,9 @@ border-radius:0 14px 14px 0;
 color:#999
 }
 
-
 @media(max-width:800px){
 
-.grid,
-.pricing-grid{
+.grid,.pricing-grid{
 grid-template-columns:1fr
 }
 
@@ -633,7 +634,6 @@ VideoClean AI
 
 <main id="home">
 
-
 <section class="hero container">
 
 <h1>
@@ -664,44 +664,42 @@ Login / Create Account
 class="field"
 id="email"
 type="email"
-placeholder="Email address">
+placeholder="Email address"
+>
 
 <input
 class="field"
 id="password"
 type="password"
-placeholder="Password">
+placeholder="Password"
+>
 
 <button
 class="primary"
 id="authButton"
-onclick="login()">
-
+onclick="login()"
+>
 Login
-
 </button>
 
 <button
 class="secondary"
-onclick="toggleAuth()">
-
+onclick="toggleAuth()"
+>
 Create new account
-
 </button>
 
 <div
 class="auth-msg"
-id="authMessage">
-</div>
+id="authMessage"
+></div>
 
 </div>
 
 
 <!-- APP -->
 
-<div
-id="appBox"
-style="display:none">
+<div id="appBox" style="display:none">
 
 <h2 style="font-size:32px;margin-top:0">
 Welcome to VideoClean AI 👋
@@ -718,15 +716,24 @@ Video Cleaner
 
 <div
 id="freeCounter"
-style="margin-bottom:15px;padding:12px 16px;background:#0d0d0d;border:1px solid #292929;border-radius:14px;color:#aaa;text-align:center">
+style="
+margin-bottom:15px;
+padding:12px 16px;
+background:#0d0d0d;
+border:1px solid #292929;
+border-radius:14px;
+color:#aaa;
+text-align:center
+"
+>
 
 Free plan:
+
 <strong
 id="freeCounterText"
-style="color:#20d9ff">
-
+style="color:#20d9ff"
+>
 1 free video available
-
 </strong>
 
 </div>
@@ -736,7 +743,8 @@ style="color:#20d9ff">
 
 <label
 class="drop"
-for="videoFile">
+for="videoFile"
+>
 
 <div class="upload-icon">
 📤
@@ -745,6 +753,7 @@ for="videoFile">
 <strong>
 
 Drag video or
+
 <span style="color:#21d8ff">
 Browse
 </span>
@@ -757,10 +766,9 @@ Upload your supported video file
 
 <div
 class="file-name"
-id="fileName">
-
+id="fileName"
+>
 No file selected
-
 </div>
 
 </label>
@@ -770,21 +778,23 @@ No file selected
 id="videoFile"
 type="file"
 accept="video/*"
-onchange="showFileName()">
+onchange="showFileName()"
+>
 
 
-<!-- VIDEO PREVIEW -->
+<!-- PREVIEW -->
 
 <div
 class="preview-wrap"
-id="previewWrap">
+id="previewWrap"
+>
 
 <video
 id="videoPreview"
 controls
 playsinline
-preload="metadata">
-</video>
+preload="metadata"
+></video>
 
 <div class="video-info">
 
@@ -794,10 +804,9 @@ preload="metadata">
 
 <span
 class="video-time"
-id="videoTime">
-
+id="videoTime"
+>
 00:00 / 00:00
-
 </span>
 
 </div>
@@ -811,10 +820,9 @@ id="videoTime">
 class="primary"
 id="processButton"
 onclick="processVideo()"
-style="margin-top:15px">
-
+style="margin-top:15px"
+>
 ✨ Process Video
-
 </button>
 
 
@@ -822,7 +830,8 @@ style="margin-top:15px">
 
 <div
 class="progress-box"
-id="progressBox">
+id="progressBox"
+>
 
 <div class="progress-top">
 
@@ -832,39 +841,38 @@ id="progressBox">
 
 <span
 class="progress-percent"
-id="progressPercent">
-
+id="progressPercent"
+>
 0%
-
 </span>
 
 </div>
+
 
 <div class="progress-track">
 
 <div
 class="progress-bar"
-id="progressBar">
-</div>
+id="progressBar"
+></div>
 
 </div>
+
 
 <div class="processing-info">
 
 <span
 class="processing-text"
-id="progressText">
-
+id="progressText"
+>
 Ready to process
-
 </span>
 
 <span
 class="processing-timer"
-id="processingTimer">
-
+id="processingTimer"
+>
 00:00
-
 </span>
 
 </div>
@@ -874,7 +882,35 @@ id="processingTimer">
 
 <div
 class="status"
-id="status">
+id="status"
+></div>
+
+
+<!-- DOWNLOAD -->
+
+<div
+class="download-box"
+id="downloadBox"
+>
+
+<h3>
+🎉 Video Processing Complete
+</h3>
+
+<p style="color:#aaa">
+Your cleaned video is ready.
+</p>
+
+<a
+id="downloadButton"
+class="download-button"
+href="#"
+target="_blank"
+download
+>
+⬇️ Download Cleaned Video
+</a>
+
 </div>
 
 
@@ -882,7 +918,8 @@ id="status">
 
 <div
 class="offer-box"
-id="creatorOffer">
+id="creatorOffer"
+>
 
 <span class="offer-badge">
 🔥 LIMITED OFFER
@@ -904,14 +941,20 @@ Creator Plan
 
 </div>
 
-<div style="color:#aaa;margin-bottom:15px">
-
+<div
+style="color:#aaa;margin-bottom:15px"
+>
 per month • 50 videos/month
-
 </div>
 
 <ul
-style="list-style:none;padding:0;color:#aaa;text-align:left">
+style="
+list-style:none;
+padding:0;
+color:#aaa;
+text-align:left
+"
+>
 
 <li>✓ 50 videos every month</li>
 <li>✓ Enhanced processing</li>
@@ -922,18 +965,11 @@ style="list-style:none;padding:0;color:#aaa;text-align:left">
 
 <button
 class="offer-button"
-onclick="showCreatorOffer()">
-
+onclick="showCreatorOffer()"
+>
 🔥 Get Creator ₹99
-
 </button>
 
-</div>
-
-
-<div
-class="payment-status"
-id="paymentStatus">
 </div>
 
 </div>
@@ -947,19 +983,14 @@ id="paymentStatus">
 
 <section
 class="section container"
-id="features">
+id="features"
+>
 
 <h2 class="section-title">
-
-Powerful
-<span class="gradient">
-Video Tools
-</span>
-
+Powerful <span class="gradient">Video Tools</span>
 </h2>
 
 <div class="grid">
-
 
 <div class="card feature">
 
@@ -989,7 +1020,7 @@ Audio Cleanup
 </h3>
 
 <p>
-Use the audio-cleaning option supported by your backend.
+Clean and improve audio through the connected processing backend.
 </p>
 
 </div>
@@ -1011,7 +1042,6 @@ Simple upload-to-processing workflow with clear status feedback.
 
 </div>
 
-
 </div>
 
 </section>
@@ -1021,17 +1051,12 @@ Simple upload-to-processing workflow with clear status feedback.
 
 <section
 class="section container"
-id="pricing">
+id="pricing"
+>
 
 <h2 class="section-title">
-
-Choose Your
-<span class="gradient">
-Plan
-</span>
-
+Choose Your <span class="gradient">Plan</span>
 </h2>
-
 
 <div class="pricing-grid">
 
@@ -1054,19 +1079,29 @@ Free
 
 <ul>
 
-<li>1 video only</li>
-<li>Basic processing</li>
-<li>Standard resolution</li>
-<li>Basic support</li>
+<li>
+1 video only
+</li>
+
+<li>
+Basic processing
+</li>
+
+<li>
+Standard resolution
+</li>
+
+<li>
+Basic support
+</li>
 
 </ul>
 
 <button
 class="outline"
-onclick="scrollToUploader()">
-
+onclick="scrollToUploader()"
+>
 Use Free Video
-
 </button>
 
 </div>
@@ -1087,17 +1122,23 @@ Creator
 <div style="margin-top:10px">
 
 <span
-style="font-size:22px;color:#777;text-decoration:line-through;margin-right:8px">
-
+style="
+font-size:22px;
+color:#777;
+text-decoration:line-through;
+margin-right:8px
+"
+>
 ₹399
-
 </span>
 
 <span
-style="font-size:55px;font-weight:900">
-
+style="
+font-size:55px;
+font-weight:900
+"
+>
 ₹99
-
 </span>
 
 </div>
@@ -1108,19 +1149,29 @@ per month
 
 <ul>
 
-<li>50 videos / month</li>
-<li>Enhanced processing</li>
-<li>Audio cleanup</li>
-<li>Priority processing</li>
+<li>
+50 videos / month
+</li>
+
+<li>
+Enhanced processing
+</li>
+
+<li>
+Audio cleanup
+</li>
+
+<li>
+Priority processing
+</li>
 
 </ul>
 
 <button
 class="outline"
-onclick="showCreatorOffer()">
-
+onclick="showCreatorOffer()"
+>
 Get Creator ₹99
-
 </button>
 
 </div>
@@ -1144,23 +1195,32 @@ per month
 
 <ul>
 
-<li>200 videos / month</li>
-<li>Bulk processing</li>
-<li>High-quality export</li>
-<li>Business support</li>
+<li>
+200 videos / month
+</li>
+
+<li>
+Bulk processing
+</li>
+
+<li>
+High-quality export
+</li>
+
+<li>
+Business support
+</li>
 
 </ul>
 
 <button
 class="outline"
-onclick="showBusinessOffer()">
-
+onclick="showBusinessOffer()"
+>
 Get Business
-
 </button>
 
 </div>
-
 
 </div>
 
@@ -1171,17 +1231,12 @@ Get Business
 
 <section
 class="section container"
-id="faq">
+id="faq"
+>
 
 <h2 class="section-title">
-
-Frequently Asked
-<span class="gradient">
-Questions
-</span>
-
+Frequently Asked <span class="gradient">Questions</span>
 </h2>
-
 
 <div class="faq">
 
@@ -1190,7 +1245,8 @@ Questions
 
 <button
 class="faq-q"
-onclick="faq(this)">
+onclick="faq(this)"
+>
 
 VideoClean AI kaise kaam karta hai?
 
@@ -1202,7 +1258,7 @@ VideoClean AI kaise kaam karta hai?
 
 <div class="faq-a">
 
-Video upload karne ke baad file connected processing backend ko bheji jaati hai. Result milne par download link diya jaata hai.
+Video upload karne ke baad file connected processing backend ko bheji jaati hai. Processing complete hone par download link diya jaata hai.
 
 </div>
 
@@ -1213,7 +1269,8 @@ Video upload karne ke baad file connected processing backend ko bheji jaati hai.
 
 <button
 class="faq-q"
-onclick="faq(this)">
+onclick="faq(this)"
+>
 
 Video process hone mein kitna time lagta hai?
 
@@ -1236,7 +1293,8 @@ Short videos ke liye processing time video size aur backend load par depend kart
 
 <button
 class="faq-q"
-onclick="faq(this)">
+onclick="faq(this)"
+>
 
 Kaunse video formats upload kar sakte hain?
 
@@ -1259,7 +1317,8 @@ Common video formats upload kiye ja sakte hain. Actual support backend configura
 
 <button
 class="faq-q"
-onclick="faq(this)">
+onclick="faq(this)"
+>
 
 Kya account banana zaroori hai?
 
@@ -1276,7 +1335,6 @@ Current version mein processing app login ke baad available hai.
 </div>
 
 </div>
-
 
 </div>
 
@@ -1326,7 +1384,6 @@ VideoClean AI is a video processing and optimization tool. Users are responsible
 
 </div>
 
-
 <p>
 © 2026 VideoClean AI — All rights reserved.
 </p>
@@ -1359,12 +1416,12 @@ SUPABASE_KEY
    VARIABLES
 ========================= */
 
-let signupMode=false;
-let previewURL=null;
-let progressTimer=null;
-let elapsed=0;
+let signupMode = false;
+let previewURL = null;
+let progressTimer = null;
+let elapsed = 0;
 
-const FREE_VIDEO_LIMIT=1;
+const FREE_VIDEO_LIMIT = 1;
 
 
 /* =========================
@@ -1380,7 +1437,6 @@ document
 
 }
 
-
 function closeMenu(){
 
 document
@@ -1392,81 +1448,70 @@ document
 
 
 /* =========================
-   AUTH MODE
+   LOGIN / SIGNUP
 ========================= */
 
 function toggleAuth(){
 
-signupMode=!signupMode;
+signupMode = !signupMode;
 
-document.getElementById(
-"authButton"
-).innerText=
-signupMode
-? "Sign Up"
-: "Login";
+document.getElementById("authButton").innerText =
+signupMode ? "Sign Up" : "Login";
 
 document.querySelector(
 "#authBox .secondary"
-).innerText=
+).innerText =
 signupMode
 ? "Back to Login"
 : "Create new account";
 
 document.getElementById(
 "authMessage"
-).innerText="";
+).innerText = "";
 
 }
 
 
-/* =========================
-   LOGIN
-========================= */
-
 async function login(){
 
-const email=
-document.getElementById(
-"email"
-).value.trim();
+const email =
+document
+.getElementById("email")
+.value
+.trim();
 
-const password=
-document.getElementById(
-"password"
-).value;
+const password =
+document
+.getElementById("password")
+.value;
 
-const msg=
+const msg =
 document.getElementById(
 "authMessage"
 );
 
-
 if(!email || !password){
 
-msg.innerText=
+msg.innerText =
 "Please enter email and password.";
 
 return;
 
 }
 
+if(password.length < 6){
 
-if(!supabaseClient){
-
-msg.innerText=
-"Login system is not available.";
+msg.innerText =
+"Password must be at least 6 characters.";
 
 return;
 
 }
 
-
-msg.innerText=
+msg.innerText =
 signupMode
 ? "Creating account..."
 : "Logging in...";
-
 
 try{
 
@@ -1474,7 +1519,7 @@ let result;
 
 if(signupMode){
 
-result=
+result =
 await supabaseClient.auth.signUp({
 email:email,
 password:password
@@ -1482,7 +1527,7 @@ password:password
 
 }else{
 
-result=
+result =
 await supabaseClient.auth.signInWithPassword({
 email:email,
 password:password
@@ -1490,34 +1535,31 @@ password:password
 
 }
 
-
 if(result.error){
 
-msg.innerText=
-"❌ "+result.error.message;
+msg.innerText =
+result.error.message;
 
 return;
 
 }
 
-
 if(signupMode){
 
-msg.innerText=
-"✅ Account created. Please confirm your email, then login.";
-
-}else{
-
-if(result.data && result.data.user){
+if(result.data.session){
 
 showApp(result.data.user);
 
 }else{
 
-msg.innerText=
-"Login was not completed.";
+msg.innerText =
+"Account created. Please confirm your email, then login.";
 
 }
+
+}else{
+
+showApp(result.data.user);
 
 }
 
@@ -1525,8 +1567,8 @@ msg.innerText=
 
 console.error(error);
 
-msg.innerText=
-"❌ Login error: "+error.message;
+msg.innerText =
+"Something went wrong. Please try again.";
 
 }
 
@@ -1534,7 +1576,7 @@ msg.innerText=
 
 
 /* =========================
-   FREE VIDEO
+   FREE VIDEO STORAGE
 ========================= */
 
 function getFreeVideoCount(){
@@ -1542,7 +1584,7 @@ function getFreeVideoCount(){
 return parseInt(
 localStorage.getItem(
 "videoclean_free_videos"
-)||"0"
+) || "0"
 );
 
 }
@@ -1560,17 +1602,18 @@ count
 
 function hasUsedFreeVideo(){
 
-return getFreeVideoCount()>=FREE_VIDEO_LIMIT;
+return getFreeVideoCount()
+>= FREE_VIDEO_LIMIT;
 
 }
 
 
 function useFreeVideo(){
 
-const count=
-getFreeVideoCount()+1;
+const newCount =
+getFreeVideoCount() + 1;
 
-setFreeVideoCount(count);
+setFreeVideoCount(newCount);
 
 updateFreeCounter();
 
@@ -1579,43 +1622,35 @@ updateFreeCounter();
 
 function updateFreeCounter(){
 
-const count=
+const count =
 getFreeVideoCount();
 
-const text=
+const text =
 document.getElementById(
 "freeCounterText"
 );
 
 if(!text)return;
 
+if(count >= FREE_VIDEO_LIMIT){
 
-if(count>=FREE_VIDEO_LIMIT){
-
-text.innerText=
+text.innerText =
 "Free video used — Upgrade to Creator";
 
-text.style.color=
+text.style.color =
 "#ff6b7d";
 
-const offer=
 document.getElementById(
 "creatorOffer"
-);
-
-if(offer){
-
-offer.style.display=
+).style.display =
 "block";
-
-}
 
 }else{
 
-text.innerText=
+text.innerText =
 "1 free video available";
 
-text.style.color=
+text.style.color =
 "#20d9ff";
 
 }
@@ -1631,12 +1666,12 @@ function showApp(user){
 
 document.getElementById(
 "authBox"
-).style.display=
+).style.display =
 "none";
 
 document.getElementById(
 "appBox"
-).style.display=
+).style.display =
 "block";
 
 updateFreeCounter();
@@ -1645,28 +1680,17 @@ updateFreeCounter();
 
 
 /* =========================
-   CHECK USER
+   CHECK LOGIN
 ========================= */
 
 async function checkUser(){
 
 try{
 
-const {data,error}=
+const {data} =
 await supabaseClient.auth.getUser();
 
-if(error){
-
-console.log(
-"Auth check:",
-error.message
-);
-
-return;
-
-}
-
-if(data && data.user){
+if(data.user){
 
 showApp(data.user);
 
@@ -1675,8 +1699,7 @@ showApp(data.user);
 }catch(error){
 
 console.log(
-"Session check failed:",
-error
+"User not logged in"
 );
 
 }
@@ -1685,53 +1708,30 @@ error
 
 
 /* =========================
-   CREATOR PAYMENT
+   FORMAT TIME
 ========================= */
 
-async function showCreatorOffer(){
+function formatTime(seconds){
 
-const paymentStatus=
-document.getElementById(
-"paymentStatus"
-);
+if(!isFinite(seconds))
+return "00:00";
 
-if(paymentStatus){
+seconds =
+Math.floor(seconds);
 
-paymentStatus.style.display=
-"block";
+const minutes =
+Math.floor(seconds / 60)
+.toString()
+.padStart(2,"0");
 
-paymentStatus.innerText=
-"⏳ Opening secure payment...";
+const secs =
+(seconds % 60)
+.toString()
+.padStart(2,"0");
+
+return minutes + ":" + secs;
 
 }
 
 
-try{
-
-/* CREATE ORDER */
-
-const orderResponse=
-await fetch(
-"/api/create-order",
-{
-method:"POST",
-headers:{
-"Content-Type":
-"application/json"
-},
-body:JSON.stringify({
-amount:9900,
-currency:"INR",
-receipt:
-"creator_"+Date.now()
-})
-}
-);
-
-
-if(!orderResponse.ok){
-
-const errorText=
-await orderResponse.text();
-
-throw ne
+   
