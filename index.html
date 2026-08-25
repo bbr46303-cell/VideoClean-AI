@@ -633,29 +633,94 @@ wrap.style.display = "block";
 
 function processVideo(){
 
-const file =
-document.getElementById(
-"videoFile"
-).files[0];
+    const fileInput = document.getElementById("videoFile");
+    const status = document.getElementById("status");
 
-const status =
-document.getElementById(
-"status"
-);
+    const file = fileInput.files[0];
 
-if(!file){
+    if(!file){
+        status.innerText = "Please select a video first.";
+        return;
+    }
 
-status.innerText =
-"Please select a video first.";
+    status.innerText = "⏳ Uploading video... Please wait.";
 
-return;
+    const formData = new FormData();
 
-}
+    formData.append("video", file);
 
-status.innerText =
-"Video selected successfully. Processing backend will be connected next.";
+    formData.append("x", "0");
+    formData.append("y", "0");
+    formData.append("w", "0");
+    formData.append("h", "0");
 
-}
+    formData.append("enhance", "true");
+    formData.append("audio_clean", "true");
+
+    fetch("/process-video", {
+        method: "POST",
+        body: formData
+    })
+    .then(async response => {
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(
+                data.detail ||
+                data.error ||
+                "Video processing failed"
+            );
+        }
+
+        return data;
+
+    })
+    .then(data => {
+
+        if(!data.job){
+            throw new Error("No job ID received from server.");
+        }
+
+        status.innerText =
+            "✅ Video processed successfully!";
+
+        const downloadButton =
+            document.createElement("a");
+
+        downloadButton.href =
+            "/download/" + data.job;
+
+        downloadButton.download =
+            "VideoClean-AI.mp4";
+
+        downloadButton.innerText =
+            "⬇️ Download Clean Video";
+
+        downloadButton.style.display = "block";
+        downloadButton.style.textAlign = "center";
+        downloadButton.style.padding = "16px";
+        downloadButton.style.marginTop = "15px";
+        downloadButton.style.borderRadius = "14px";
+        downloadButton.style.background =
+            "linear-gradient(90deg,#08d7f3,#447cff,#873eff)";
+        downloadButton.style.color = "#fff";
+        downloadButton.style.textDecoration = "none";
+        downloadButton.style.fontWeight = "900";
+
+        document.getElementById("appBox")
+            .appendChild(downloadButton);
+
+    })
+    .catch(error => {
+
+        console.error(error);
+
+        status.innerText =
+            "❌ " + (error.message || "Processing failed.");
+
+    });
+           }
 
 
 /* =========================
