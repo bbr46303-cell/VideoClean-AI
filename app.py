@@ -793,4 +793,4 @@ async def process_video(
 
         video_data = await video.read()
 
-        if
+        if not video_data:
