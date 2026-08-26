@@ -41,10 +41,8 @@ APP.add_middleware(
 ROOT = Path(__file__).resolve().parent
 
 FRONTEND = ROOT / "index.html"
-
 UPLOAD_DIR = ROOT / "uploads"
 OUTPUT_DIR = ROOT / "outputs"
-
 USAGE_FILE = ROOT / "usage.json"
 
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -52,55 +50,50 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # =========================================================
-# RAZORPAY CONFIG
+# RAZORPAY
 # =========================================================
 
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "").strip()
+RAZORPAY_KEY_ID = os.getenv(
+    "RAZORPAY_KEY_ID",
+    ""
+).strip()
 
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "").strip()
+RAZORPAY_KEY_SECRET = os.getenv(
+    "RAZORPAY_KEY_SECRET",
+    ""
+).strip()
 
 RAZORPAY_PLAN_ID = os.getenv(
     "RAZORPAY_PLAN_ID",
     "plan_TU4y2sFEE55IWF"
 ).strip()
 
-
 razorpay_client = None
 
 
 if RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET:
-
     try:
-
         razorpay_client = razorpay.Client(
             auth=(
                 RAZORPAY_KEY_ID,
                 RAZORPAY_KEY_SECRET
             )
         )
-
         print("Razorpay client initialized.")
 
     except Exception as e:
-
         print(
-            "Razorpay client initialization failed:",
-            str(e)
+            "Razorpay initialization error:",
+            repr(e)
         )
 
 else:
-
     print(
         "WARNING: Razorpay credentials are not configured."
     )
 
 
-# =========================================================
-# HELPERS
-# =========================================================
-
 def razorpay_ready():
-
     return (
         razorpay_client is not None
         and bool(RAZORPAY_KEY_ID)
@@ -121,7 +114,7 @@ def razorpay_mode():
 
 
 # =========================================================
-# USAGE STORAGE
+# USAGE
 # =========================================================
 
 usage_lock = threading.Lock()
@@ -133,7 +126,6 @@ def load_usage():
         return {}
 
     try:
-
         return json.loads(
             USAGE_FILE.read_text(
                 encoding="utf-8"
@@ -141,12 +133,10 @@ def load_usage():
         )
 
     except Exception as e:
-
         print(
-            "Usage file read error:",
-            str(e)
+            "Usage read error:",
+            repr(e)
         )
-
         return {}
 
 
@@ -169,7 +159,6 @@ def save_usage(data):
 def home():
 
     if FRONTEND.exists():
-
         return FileResponse(
             str(FRONTEND),
             media_type="text/html"
@@ -205,14 +194,12 @@ def health():
 def razorpay_config():
 
     if not RAZORPAY_KEY_ID:
-
         raise HTTPException(
             status_code=500,
             detail="Razorpay Key ID is not configured"
         )
 
     if not RAZORPAY_PLAN_ID:
-
         raise HTTPException(
             status_code=500,
             detail="Razorpay Plan ID is not configured"
@@ -232,7 +219,6 @@ def razorpay_config():
 def razorpay_test():
 
     if not razorpay_ready():
-
         raise HTTPException(
             status_code=500,
             detail={
@@ -245,7 +231,6 @@ def razorpay_test():
 
     try:
 
-        # Fetch plan to verify API credentials
         plan = razorpay_client.plan.fetch(
             RAZORPAY_PLAN_ID
         )
@@ -255,8 +240,14 @@ def razorpay_test():
             "message": "Razorpay authentication successful",
             "mode": razorpay_mode(),
             "plan_id": plan.get("id"),
-            "plan_name": plan.get("item", {}).get("name"),
-            "plan_amount": plan.get("item", {}).get("amount")
+            "plan_name": plan.get(
+                "item",
+                {}
+            ).get("name"),
+            "plan_amount": plan.get(
+                "item",
+                {}
+            ).get("amount")
         }
 
     except Exception as e:
@@ -270,10 +261,8 @@ def razorpay_test():
             status_code=401,
             detail=(
                 "Razorpay authentication failed. "
-                "Check that RAZORPAY_KEY_ID and "
-                "RAZORPAY_KEY_SECRET belong to the same "
-                "Razorpay account and mode, and that the "
-                "Plan ID belongs to that same mode."
+                "Check Key ID, Key Secret and Plan ID. "
+                "They must belong to the same Razorpay mode."
             )
         )
 
@@ -286,7 +275,6 @@ def razorpay_test():
 async def create_subscription():
 
     if not razorpay_ready():
-
         raise HTTPException(
             status_code=500,
             detail="Razorpay is not configured correctly"
@@ -294,17 +282,16 @@ async def create_subscription():
 
     try:
 
-        subscription = razorpay_client.subscription.create({
-
-            "plan_id": RAZORPAY_PLAN_ID,
-
-            # 12 monthly billing cycles
-            "total_count": 12,
-
-            "quantity": 1,
-
-            "customer_notify": 1
-        })
+        subscription = (
+            razorpay_client.subscription.create(
+                {
+                    "plan_id": RAZORPAY_PLAN_ID,
+                    "total_count": 12,
+                    "quantity": 1,
+                    "customer_notify": 1
+                }
+            )
+        )
 
         print(
             "Subscription created:",
@@ -312,33 +299,25 @@ async def create_subscription():
         )
 
         return {
-
             "success": True,
-
-            "subscription_id":
-                subscription["id"],
-
-            "plan_id":
-                RAZORPAY_PLAN_ID
+            "subscription_id": subscription["id"],
+            "plan_id": RAZORPAY_PLAN_ID
         }
 
     except Exception as e:
 
         print(
-            "Razorpay subscription creation error:",
+            "Subscription creation error:",
             repr(e)
         )
 
-        error_text = str(e).lower()
+        text = str(e).lower()
 
         if (
-            "authentication" in error_text
-            or
-            "unauthorized" in error_text
-            or
-            "401" in error_text
+            "authentication" in text
+            or "unauthorized" in text
+            or "401" in text
         ):
-
             raise HTTPException(
                 status_code=401,
                 detail="Razorpay authentication failed"
@@ -351,24 +330,16 @@ async def create_subscription():
 
 
 # =========================================================
-# VERIFY SUBSCRIPTION PAYMENT
+# VERIFY SUBSCRIPTION
 # =========================================================
 
 @APP.post("/api/verify-subscription")
 async def verify_subscription(data: dict):
 
-    if razorpay_client is None:
-
+    if not razorpay_ready():
         raise HTTPException(
             status_code=500,
             detail="Razorpay is not configured"
-        )
-
-    if not RAZORPAY_KEY_SECRET:
-
-        raise HTTPException(
-            status_code=500,
-            detail="Razorpay secret is not configured"
         )
 
     payment_id = data.get(
@@ -384,56 +355,40 @@ async def verify_subscription(data: dict):
     )
 
     if not payment_id:
-
         raise HTTPException(
             status_code=400,
             detail="Missing razorpay_payment_id"
         )
 
     if not subscription_id:
-
         raise HTTPException(
             status_code=400,
             detail="Missing razorpay_subscription_id"
         )
 
     if not signature:
-
         raise HTTPException(
             status_code=400,
             detail="Missing razorpay_signature"
         )
 
-    # -----------------------------------------------------
-    # VERIFY SIGNATURE
-    # -----------------------------------------------------
-
+    # Verify Razorpay signature
     generated_signature = hmac.new(
-
         RAZORPAY_KEY_SECRET.encode("utf-8"),
-
-        (
-            f"{payment_id}|{subscription_id}"
-        ).encode("utf-8"),
-
+        f"{payment_id}|{subscription_id}".encode("utf-8"),
         hashlib.sha256
-
     ).hexdigest()
 
     if not hmac.compare_digest(
         generated_signature,
         signature
     ):
-
         raise HTTPException(
             status_code=400,
             detail="Subscription payment verification failed"
         )
 
-    # -----------------------------------------------------
-    # FETCH SUBSCRIPTION
-    # -----------------------------------------------------
-
+    # Verify subscription exists
     try:
 
         subscription = (
@@ -456,38 +411,24 @@ async def verify_subscription(data: dict):
 
     status = subscription.get("status")
 
-    # Razorpay may return authenticated immediately
-    # after authorization. Active means subscription
-    # is fully active.
-
     if status not in [
         "authenticated",
         "active"
     ]:
-
         raise HTTPException(
             status_code=400,
             detail=(
-                f"Subscription is not active. "
+                "Subscription is not active. "
                 f"Current status: {status}"
             )
         )
 
     return {
-
         "success": True,
-
-        "message":
-            "Subscription verified successfully",
-
-        "subscription_id":
-            subscription_id,
-
-        "payment_id":
-            payment_id,
-
-        "status":
-            status
+        "message": "Subscription verified successfully",
+        "subscription_id": subscription_id,
+        "payment_id": payment_id,
+        "status": status
     }
 
 
@@ -496,12 +437,9 @@ async def verify_subscription(data: dict):
 # =========================================================
 
 @APP.get("/api/subscription/{subscription_id}")
-def subscription_status(
-    subscription_id: str
-):
+def subscription_status(subscription_id: str):
 
-    if razorpay_client is None:
-
+    if not razorpay_ready():
         raise HTTPException(
             status_code=500,
             detail="Razorpay is not configured"
@@ -527,9 +465,7 @@ def subscription_status(
             detail="Subscription not found"
         )
 
-    status = subscription.get(
-        "status"
-    )
+    status = subscription.get("status")
 
     current_start = subscription.get(
         "current_start"
@@ -558,75 +494,45 @@ def subscription_status(
             )
         )
 
-    remaining = max(
-        0,
-        50 - videos_used
-    )
-
     return {
-
-        "subscription_id":
-            subscription_id,
-
-        "status":
-            status,
-
-        "videos_used":
-            videos_used,
-
-        "videos_remaining":
-            remaining,
-
-        "monthly_limit":
-            50,
-
-        "max_minutes":
-            10,
-
-        "current_start":
-            current_start,
-
-        "current_end":
-            current_end
+        "subscription_id": subscription_id,
+        "status": status,
+        "videos_used": videos_used,
+        "videos_remaining": max(
+            0,
+            50 - videos_used
+        ),
+        "monthly_limit": 50,
+        "max_minutes": 10,
+        "current_start": current_start,
+        "current_end": current_end
     }
 
 
 # =========================================================
-# GET VIDEO DURATION
+# VIDEO DURATION
 # =========================================================
 
-def get_video_duration(
-    file_path: Path
-):
+def get_video_duration(file_path: Path):
 
     command = [
-
         "ffprobe",
-
         "-v",
         "error",
-
         "-show_entries",
         "format=duration",
-
         "-of",
         "default=noprint_wrappers=1:nokey=1",
-
         str(file_path)
     ]
 
     try:
 
         result = subprocess.run(
-
             command,
-
             check=True,
-
             stdout=subprocess.PIPE,
-
             stderr=subprocess.PIPE,
-
             text=True
         )
 
@@ -673,18 +579,17 @@ async def process_video(
     )
 
     # -----------------------------------------------------
-    # CHECK RAZORPAY
+    # RAZORPAY CHECK
     # -----------------------------------------------------
 
     if not razorpay_ready():
-
         raise HTTPException(
             status_code=500,
             detail="Razorpay is not configured"
         )
 
     # -----------------------------------------------------
-    # CHECK SUBSCRIPTION
+    # SUBSCRIPTION CHECK
     # -----------------------------------------------------
 
     try:
@@ -707,11 +612,11 @@ async def process_video(
             detail="Invalid subscription"
         )
 
-    subscription_status_value = (
-        subscription.get("status")
+    subscription_status = subscription.get(
+        "status"
     )
 
-    if subscription_status_value != "active":
+    if subscription_status != "active":
 
         raise HTTPException(
             status_code=403,
@@ -722,7 +627,7 @@ async def process_video(
         )
 
     # -----------------------------------------------------
-    # CURRENT BILLING CYCLE
+    # BILLING CYCLE
     # -----------------------------------------------------
 
     current_start = subscription.get(
@@ -738,7 +643,7 @@ async def process_video(
     )
 
     # -----------------------------------------------------
-    # CHECK MONTHLY LIMIT
+    # MONTHLY LIMIT
     # -----------------------------------------------------
 
     with usage_lock:
@@ -764,7 +669,7 @@ async def process_video(
             )
 
     # -----------------------------------------------------
-    # CREATE JOB
+    # JOB
     # -----------------------------------------------------
 
     job = uuid.uuid4().hex
@@ -786,7 +691,7 @@ async def process_video(
     )
 
     # -----------------------------------------------------
-    # SAVE VIDEO
+    # SAVE UPLOAD
     # -----------------------------------------------------
 
     try:
@@ -794,3 +699,251 @@ async def process_video(
         video_data = await video.read()
 
         if not video_data:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Uploaded video is empty"
+            )
+
+        input_file.write_bytes(
+            video_data
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+
+        print(
+            "Upload error:",
+            repr(e)
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to save uploaded video"
+        )
+
+    # -----------------------------------------------------
+    # DURATION
+    # -----------------------------------------------------
+
+    duration = get_video_duration(
+        input_file
+    )
+
+    if duration is None:
+
+        input_file.unlink(
+            missing_ok=True
+        )
+
+        raise HTTPException(
+            status_code=400,
+            detail="Unable to read video duration"
+        )
+
+    if duration > 600:
+
+        input_file.unlink(
+            missing_ok=True
+        )
+
+        raise HTTPException(
+            status_code=400,
+            detail="Maximum video length is 10 minutes."
+        )
+
+    # -----------------------------------------------------
+    # VIDEO FILTERS
+    # -----------------------------------------------------
+
+    video_filters = []
+
+    if enhance:
+
+        video_filters.append(
+            "eq=contrast=1.03:saturation=1.03"
+        )
+
+    if (
+        w > 0
+        and h > 0
+    ):
+
+        video_filters.append(
+            f"delogo="
+            f"x={x}:"
+            f"y={y}:"
+            f"w={w}:"
+            f"h={h}:"
+            f"show=0"
+        )
+
+    # -----------------------------------------------------
+    # FFMPEG
+    # -----------------------------------------------------
+
+    command = [
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(input_file)
+    ]
+
+    if video_filters:
+
+        command += [
+            "-vf",
+            ",".join(video_filters)
+        ]
+
+    if audio_clean:
+
+        command += [
+            "-af",
+            "highpass=f=80,"
+            "lowpass=f=16000"
+        ]
+
+    command += [
+        "-c:v",
+        "libx264",
+
+        "-preset",
+        "ultrafast",
+
+        "-crf",
+        "26",
+
+        "-c:a",
+        "aac",
+
+        "-b:a",
+        "128k",
+
+        "-movflags",
+        "+faststart",
+
+        str(output_file)
+    ]
+
+    # -----------------------------------------------------
+    # RUN FFMPEG
+    # -----------------------------------------------------
+
+    try:
+
+        subprocess.run(
+            command,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+
+    except FileNotFoundError:
+
+        input_file.unlink(
+            missing_ok=True
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="FFmpeg is not installed on server"
+        )
+
+    except subprocess.CalledProcessError as e:
+
+        input_file.unlink(
+            missing_ok=True
+        )
+
+        error_text = e.stderr.decode(
+            errors="ignore"
+        )
+
+        print(
+            "FFmpeg ERROR:",
+            error_text[-3000:]
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Video processing failed"
+        )
+
+    except Exception as e:
+
+        input_file.unlink(
+            missing_ok=True
+        )
+
+        print(
+            "FFmpeg unexpected error:",
+            repr(e)
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Video processing failed"
+        )
+
+    # -----------------------------------------------------
+    # OUTPUT CHECK
+    # -----------------------------------------------------
+
+    if not output_file.exists():
+
+        input_file.unlink(
+            missing_ok=True
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Processed video was not created"
+        )
+
+    # -----------------------------------------------------
+    # COUNT VIDEO
+    # -----------------------------------------------------
+
+    with usage_lock:
+
+        usage = load_usage()
+
+        videos_used_after = (
+            int(
+                usage.get(
+                    usage_key,
+                    0
+                )
+            ) + 1
+        )
+
+        usage[usage_key] = (
+            videos_used_after
+        )
+
+        save_usage(
+            usage
+        )
+
+    # -----------------------------------------------------
+    # DELETE INPUT
+    # -----------------------------------------------------
+
+    input_file.unlink(
+        missing_ok=True
+    )
+
+    # -----------------------------------------------------
+    # SUCCESS
+    # -----------------------------------------------------
+
+    return {
+        "success": True,
+        "job": job,
+        "videos_used": videos_used_after,
+        "videos_remaining": max(
+            0,
+            50 - 
