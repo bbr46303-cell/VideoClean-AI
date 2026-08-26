@@ -940,10 +940,61 @@ async def process_video(
     # SUCCESS
     # -----------------------------------------------------
 
-    return {
+        return {
         "success": True,
         "job": job,
         "videos_used": videos_used_after,
         "videos_remaining": max(
             0,
-            50 - 
+            50 - videos_used_after
+        ),
+        "download": f"/download/{job}"
+    }
+
+
+# =========================================================
+# DOWNLOAD
+# =========================================================
+
+@APP.get("/download/{job}")
+def download(job: str):
+
+    if not job.isalnum():
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid job ID"
+        )
+
+    output_file = OUTPUT_DIR / f"{job}.mp4"
+
+    if not output_file.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Processed video not found"
+        )
+
+    return FileResponse(
+        path=str(output_file),
+        media_type="video/mp4",
+        filename="VideoClean_AI_output.mp4"
+    )
+
+
+# =========================================================
+# RUN
+# =========================================================
+
+if __name__ == "__main__":
+
+    import uvicorn
+
+    uvicorn.run(
+        APP,
+        host="0.0.0.0",
+        port=int(
+            os.getenv(
+                "PORT",
+                "10000"
+            )
+        )
+    )
