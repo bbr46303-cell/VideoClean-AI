@@ -110,39 +110,54 @@ const $=id=>document.getElementById(id); const SUPABASE_URL='https://imqkvnfmamp
 const SUPABASE_KEY='sb_publishable_5-t8gpTfjxFZSSAnDcSjVQ_LtgZfCRf';
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const gateLoginBtn=$('gateLoginBtn');
+const gateLoginBtn = document.getElementById('gateLoginBtn');
 
-async function checkLogin(){
-  const {data:{session}}=await supabaseClient.auth.getSession();
+async function loginWithGoogle() {
+  try {
+    gateLoginBtn.disabled = true;
+    gateLoginBtn.textContent = '⏳ Login हो रहा है...';
 
-  if(session){
-    document.body.classList.remove('locked');
-    $('loginGate').style.display='none';
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+
+    if (error) {
+      console.error(error);
+      gateLoginBtn.disabled = false;
+      gateLoginBtn.textContent = '🔑 Continue with Google';
+      alert('Google Login Error: ' + error.message);
+    }
+
+  } catch (error) {
+    console.error(error);
+    gateLoginBtn.disabled = false;
+    gateLoginBtn.textContent = '🔑 Continue with Google';
+    alert('Login Error: ' + error.message);
   }
 }
 
-gateLoginBtn.onclick=async()=>{
-  gateLoginBtn.disabled=true;
-  gateLoginBtn.textContent='⏳ Login हो रहा है...';
+gateLoginBtn.addEventListener('click', loginWithGoogle);
 
-  const {error}=await supabaseClient.auth.signInWithOAuth({
-    provider:'google',
-    options:{
-      redirectTo:window.location.origin
-    }
-  });
+async function checkLogin() {
+  const { data } = await supabaseClient.auth.getSession();
 
-  if(error){
-    setStatus('❌ '+error.message,true);
-    gateLoginBtn.disabled=false;
-    gateLoginBtn.textContent='🔐 Google से Login करें';
-  }
-};
-
-supabaseClient.auth.onAuthStateChange((_event,session)=>{
-  if(session){
+  if (data && data.session) {
     document.body.classList.remove('locked');
-    $('loginGate').style.display='none';
+
+    const gate = document.getElementById('loginGate');
+    if (gate) gate.style.display = 'none';
+  }
+}
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    document.body.classList.remove('locked');
+
+    const gate = document.getElementById('loginGate');
+    if (gate) gate.style.display = 'none';
   }
 });
 
