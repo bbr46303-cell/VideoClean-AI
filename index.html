@@ -41,11 +41,22 @@ h1{font-size:clamp(42px,7vw,82px);line-height:1.02;margin:22px 0;font-weight:950
 }
 .login-btn:hover{
   opacity:.85;
+body.locked .header,
+body.locked main,
+body.locked .footer{
+  display:none!important;
 }
 </style>
 
 </head>
-<body>
+<body class="locked"> <div id="loginGate" style="position:fixed;inset:0;z-index:9999;background:#070707;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px">
+  <div style="max-width:500px;width:100%;background:#121212;border:1px solid #292929;border-radius:28px;padding:40px 25px;box-shadow:0 20px 70px rgba(0,0,0,.5)">
+    <div style="font-size:55px">🔐</div>
+    <h1 style="font-size:38px;margin:15px 0;background:linear-gradient(90deg,#12d7f5,#3c8cff,#7546ff);-webkit-background-clip:text;color:transparent">VideoClean AI</h1>
+    <p style="color:#aaa;font-size:18px;margin-bottom:28px">Login करके अपने VideoClean AI Dashboard का इस्तेमाल करें।</p>
+    <button id="gateLoginBtn" style="width:100%;border:0;border-radius:999px;padding:17px;background:linear-gradient(90deg,#08cce9,#328df6,#7740f4);color:#fff;font-size:18px;font-weight:900;cursor:pointer">🔑 Continue with Google</button>
+  </div>
+</div>
 <header class="header"><nav class="nav"><a class="logo" href="#top">VideoClean AI</a><a href="#" id="loginBtn" class="login-btn">🔐 Login</a><div class="hamb" id="hamb">☰</div><div class="menu" id="menu"><a href="#upload">Video Tool</a><a href="#how">How It Works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div></nav></header>
 
 <main id="top">
@@ -99,15 +110,43 @@ const $=id=>document.getElementById(id); const SUPABASE_URL='https://imqkvnfmamp
 const SUPABASE_KEY='sb_publishable_5-t8gpTfjxFZSSAnDcSjVQ_LtgZfCRf';
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-$('loginBtn').onclick=async(e)=>{
- e.preventDefault();
- const {error}=await supabaseClient.auth.signInWithOAuth({
-  provider:'google',
-  options:{
-   redirectTo:window.location.origin
+const gateLoginBtn=$('gateLoginBtn');
+
+async function checkLogin(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+
+  if(session){
+    document.body.classList.remove('locked');
+    $('loginGate').style.display='none';
   }
- });
- if(error)setStatus('❌ '+error.message,true);
+}
+
+gateLoginBtn.onclick=async()=>{
+  gateLoginBtn.disabled=true;
+  gateLoginBtn.textContent='⏳ Login हो रहा है...';
+
+  const {error}=await supabaseClient.auth.signInWithOAuth({
+    provider:'google',
+    options:{
+      redirectTo:window.location.origin
+    }
+  });
+
+  if(error){
+    setStatus('❌ '+error.message,true);
+    gateLoginBtn.disabled=false;
+    gateLoginBtn.textContent='🔐 Google से Login करें';
+  }
+};
+
+supabaseClient.auth.onAuthStateChange((_event,session)=>{
+  if(session){
+    document.body.classList.remove('locked');
+    $('loginGate').style.display='none';
+  }
+});
+
+checkLogin();
 };
 const fileInput=$('file'),drop=$('drop'),preview=$('preview');
 let selectedFile=null, subscriptionId=localStorage.getItem('vc_subscription_id')||'';
