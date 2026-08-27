@@ -109,8 +109,10 @@ body.locked .footer{
 const $=id=>document.getElementById(id); const SUPABASE_URL='https://imqkvnfmampzxpvkchtp.supabase.co';
 const SUPABASE_KEY='sb_publishable_5-t8gpTfjxFZSSAnDcSjVQ_LtgZfCRf';
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
 const gateLoginBtn = document.getElementById('gateLoginBtn');
+
+console.log("LOGIN SCRIPT RUNNING");
+alert("LOGIN SCRIPT RUNNING");
 
 async function loginWithGoogle() {
   try {
