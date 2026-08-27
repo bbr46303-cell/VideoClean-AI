@@ -6,7 +6,8 @@
 <title>VideoClean AI — Video Optimization</title>
 <meta name="description" content="VideoClean AI - optimize and process your own videos.">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <style>
 :root{--bg:#070707;--card:#121212;--card2:#171b20;--text:#fff;--muted:#a4a4a8;--cyan:#12d7f5;--blue:#3c8cff;--purple:#7546ff;--red:#ff5365;--green:#34d399}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.65}a{color:inherit;text-decoration:none}
 .header{position:sticky;top:0;z-index:20;background:rgba(7,7,7,.94);border-bottom:1px solid #202020;backdrop-filter:blur(12px)}
@@ -25,11 +26,27 @@ h1{font-size:clamp(42px,7vw,82px);line-height:1.02;margin:22px 0;font-weight:950
 .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.price{text-align:left}.price.popular{border-color:var(--cyan);box-shadow:0 0 35px rgba(18,215,245,.12)}.price h3{font-size:28px;margin:0 0 8px}.amount{font-size:58px;font-weight:950}.price .desc{color:#999}.price ul{padding-left:22px;color:#aaa}.price li{margin:9px 0}.price .btn{margin-top:10px}.pop{color:var(--cyan);font-weight:900;font-size:13px;letter-spacing:1px}
 .faq{max-width:850px;margin:auto}details{background:var(--card2);border:1px solid #292d33;border-left:5px solid #338eff;border-radius:18px;margin:14px 0;padding:0 22px}summary{cursor:pointer;padding:22px 4px;font-size:20px;font-weight:800}details p{color:#aaa;padding:0 4px 20px;margin:0}
 .disclaimer{max-width:900px;margin:30px auto 0;background:#111;border-left:5px solid var(--red);padding:24px;border-radius:10px;color:#999;text-align:center}.footer{border-top:1px solid #222;margin-top:60px;padding:55px 28px;text-align:center;color:#777}.footer .logo{display:inline-block;margin-bottom:10px}
-@media(max-width:760px){.nav{padding:16px 20px}.logo{font-size:30px}.menu{display:none}.hamb{display:block}.menu.open{display:flex;position:absolute;top:72px;left:0;right:0;background:#090909;padding:20px;flex-direction:column;border-bottom:1px solid #222}.hero{padding:58px 20px 30px}h1{letter-spacing:-2px}.hero p{font-size:17px}.section{padding:45px 20px}.section-title{font-size:35px}.steps,.pricing{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.upload-card{padding:15px}.drop{min-height:220px}.plan-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:760px){.nav{padding:16px 20px}.logo{font-size:30px}.menu{display:none}.hamb{display:block}.menu.open{display:flex;position:absolute;top:72px;left:0;right:0;background:#090909;padding:20px;flex-direction:column;border-bottom:1px solid #222}.hero{padding:58px 20px 30px}h1{letter-spacing:-2px}.hero p{font-size:17px}.section{padding:45px 20px}.section-title{font-size:35px}.steps,.pricing{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.upload-card{padding:15px}.drop{min-height:220px}.plan-head{align-items:flex-start;flex-direction:column}}@media(max-width:760px){...}
+
+.login-btn{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#08cce9,#328df6,#7740f4);
+  color:#fff;
+  font-weight:800;
+  margin-left:auto;
+  margin-right:18px;
+  text-decoration:none;
+}
+.login-btn:hover{
+  opacity:.85;
+}
 </style>
+
 </head>
 <body>
-<header class="header"><nav class="nav"><a class="logo" href="#top">VideoClean AI</a><div class="hamb" id="hamb">☰</div><div class="menu" id="menu"><a href="#upload">Video Tool</a><a href="#how">How It Works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div></nav></header>
+<header class="header"><nav class="nav"><a class="logo" href="#top">VideoClean AI</a><a href="#" id="loginBtn" class="login-btn">🔐 Login</a><div class="hamb" id="hamb">☰</div><div class="menu" id="menu"><a href="#upload">Video Tool</a><a href="#how">How It Works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div></nav></header>
 
 <main id="top">
 <section class="hero"><span class="badge">⚡ Fast Video Optimization</span><h1>Clean &amp; Optimize<br><span class="gradient">Your Videos</span></h1><p>Upload your own video and use VideoClean AI to improve picture quality, clean audio and export a fresh optimized copy.</p></section>
@@ -78,7 +95,20 @@ h1{font-size:clamp(42px,7vw,82px);line-height:1.02;margin:22px 0;font-weight:950
 <footer class="footer"><div class="logo">VideoClean AI</div><p>Professional video optimization for your own content.</p><p>© 2026 VideoClean AI — All rights reserved.</p></footer>
 
 <script>
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id); const SUPABASE_URL='https://imqkvnfmampzxpvkchtp.supabase.co';
+const SUPABASE_KEY='sb_publishable_5-t8gpTfjxFZSSAnDcSjVQ_LtgZfCRf';
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+$('loginBtn').onclick=async(e)=>{
+ e.preventDefault();
+ const {error}=await supabaseClient.auth.signInWithOAuth({
+  provider:'google',
+  options:{
+   redirectTo:window.location.origin
+  }
+ });
+ if(error)setStatus('❌ '+error.message,true);
+};
 const fileInput=$('file'),drop=$('drop'),preview=$('preview');
 let selectedFile=null, subscriptionId=localStorage.getItem('vc_subscription_id')||'';
 
